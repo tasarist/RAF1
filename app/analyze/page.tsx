@@ -9,60 +9,6 @@ import type { AnalyzeApiResponse } from "@/lib/types";
 type FileKey = "mainPack" | "competitor1" | "competitor2";
 type BrandKey = "brandName" | "competitor1BrandName" | "competitor2BrandName";
 
-const brandFieldByFile: Record<FileKey, BrandKey> = {
-  mainPack: "brandName",
-  competitor1: "competitor1BrandName",
-  competitor2: "competitor2BrandName",
-};
-
-const ignoredFileWords = new Set([
-  "ambalaj",
-  "ana",
-  "back",
-  "competitor",
-  "design",
-  "final",
-  "front",
-  "gorsel",
-  "görsel",
-  "main",
-  "mockup",
-  "on",
-  "pack",
-  "package",
-  "packaging",
-  "rakip",
-  "revize",
-  "tasarim",
-  "tasarım",
-  "urun",
-  "ürün",
-  "versiyon",
-  "version",
-]);
-
-function titleCaseWord(word: string) {
-  const lower = word.toLocaleLowerCase("tr-TR");
-  if (lower.length <= 2) return lower.toLocaleUpperCase("tr-TR");
-  return lower.charAt(0).toLocaleUpperCase("tr-TR") + lower.slice(1);
-}
-
-function guessBrandName(fileName: string) {
-  const baseName = fileName.replace(/\.[^/.]+$/, "");
-  const words = baseName
-    .replace(/[_-]+/g, " ")
-    .replace(/[()[\]{}]/g, " ")
-    .split(/\s+/)
-    .map((word) => word.replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü]/g, ""))
-    .filter(Boolean)
-    .filter((word) => {
-      const normalized = word.toLocaleLowerCase("tr-TR");
-      return !ignoredFileWords.has(normalized) && !/^\d+$/.test(normalized);
-    });
-
-  return words.slice(0, 2).map(titleCaseWord).join(" ");
-}
-
 export default function AnalyzePage() {
   const [category, setCategory] = useState("");
   const [productName, setProductName] = useState("");
@@ -70,11 +16,6 @@ export default function AnalyzePage() {
     brandName: "",
     competitor1BrandName: "",
     competitor2BrandName: "",
-  });
-  const [autoBrand, setAutoBrand] = useState<Record<BrandKey, boolean>>({
-    brandName: true,
-    competitor1BrandName: true,
-    competitor2BrandName: true,
   });
   const [files, setFiles] = useState<Record<FileKey, File | null>>({
     mainPack: null,
@@ -86,21 +27,10 @@ export default function AnalyzePage() {
   const [data, setData] = useState<AnalyzeApiResponse | null>(null);
 
   const updateFile = (key: FileKey, file: File | null) => {
-    const brandKey = brandFieldByFile[key];
     setFiles((current) => ({ ...current, [key]: file }));
-
-    if (!file) return;
-    const guessedBrand = guessBrandName(file.name);
-    if (!guessedBrand) return;
-
-    setBrandNames((current) => {
-      if (!autoBrand[brandKey] && current[brandKey].trim()) return current;
-      return { ...current, [brandKey]: guessedBrand };
-    });
   };
 
   const updateBrandName = (key: BrandKey, value: string) => {
-    setAutoBrand((current) => ({ ...current, [key]: false }));
     setBrandNames((current) => ({ ...current, [key]: value }));
   };
 
@@ -149,8 +79,8 @@ export default function AnalyzePage() {
           <div className="eyebrow">Yeni analiz</div>
           <h1>Üç ambalajı yükleyin.</h1>
           <p>
-            Bu sürüm analiz akışını ve sonuç ekranını doğrulamak için demo veri kullanır.
-            Attention Insight ve OpenAI bağlantıları sonraki aşamada aktif edilir.
+            Ana tasarımınızı ve iki rakibi ekleyin. Marka adlarını elle girin;
+            sonuç ekranında tüm raf karşılaştırmaları bu isimlerle gösterilir.
           </p>
         </header>
 
