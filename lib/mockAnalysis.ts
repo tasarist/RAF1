@@ -56,6 +56,7 @@ export function createMockAnalysis(project: ProjectMeta, fileNames: string[]): F
   const overall = clamp((uniqueness + productClarity + attentionStandout + distance) / 4);
 
   return {
+    source: "mock",
     scores: {
       uniqueness,
       continuityConsistency: null,
@@ -86,6 +87,7 @@ export function createMockAnalysis(project: ProjectMeta, fileNames: string[]): F
     ],
     shelfTests,
     singlePackAttention: {
+      provider: "mock",
       focusScore: singlePackAttention,
       clarityScore: clamp(72 + swing(23, 18)),
       aoi: {
