@@ -14,7 +14,14 @@ function clamp(n: number, min = 0, max = 100) {
 }
 
 export function createMockAnalysis(project: ProjectMeta, fileNames: string[]): FiveSeAnalysisResult {
-  const seed = hash([project.category, project.brandName, project.productName, ...fileNames].join("|"));
+  const seed = hash([
+    project.category,
+    project.brandName,
+    project.productName,
+    project.competitor1BrandName,
+    project.competitor2BrandName,
+    ...fileNames,
+  ].join("|"));
   const swing = (offset: number, range: number) => ((seed >> offset) % range) - Math.floor(range / 2);
 
   const uniqueness = clamp(72 + swing(1, 18));
@@ -59,23 +66,23 @@ export function createMockAnalysis(project: ProjectMeta, fileNames: string[]): F
       consumerDistanceClarity: distance,
       overall5seScore: overall,
     },
-    summary: `${project.brandName} ${project.productName} tasarımı mock simülasyonda ${overall}/100 genel 5SE skoru üretti. Raf performansı ile tekil ambalaj odağı birlikte güçlü görünürken, en yüksek etki alanı mesaj hiyerarşisini ve marka görünürlüğünü aynı anda güçlendirmek olacaktır.`,
+    summary: `${project.brandName} ${project.productName} tasarımı demo simülasyonda ${overall}/100 genel 5SE skoru üretti. ${project.competitor1BrandName} ve ${project.competitor2BrandName} ile raf karşılaştırmasında tekil ambalaj odağı ve dikkat payı birlikte değerlendirildi. En yüksek etki alanı mesaj hiyerarşisini ve marka görünürlüğünü aynı anda güçlendirmek olacaktır.`,
     strengths: [
-      "Ana görsel hiyerarşi ilk bakışta belirgin bir odak yaratıyor.",
-      "Rakiplere karşı raf attention payı ortalama seviyenin üzerinde kalıyor.",
+      `${project.brandName} için ana görsel hiyerarşi ilk bakışta belirgin bir odak yaratıyor.`,
+      `${project.competitor1BrandName} ve ${project.competitor2BrandName} karşısında raf dikkat payı izlenebilir bir seviyede kalıyor.`,
       "Genel renk ve grafik sistemi ambalajı kategoride ayırabilecek potansiyel taşıyor.",
     ],
     criticalIssues: [
       productClarity < 65 ? "Ana ürün vaadi yeterince hızlı anlaşılmıyor." : "Kritik seviyede belirgin bir mesaj problemi simüle edilmedi.",
     ],
     importantIssues: [
-      distance < 70 ? "3 m logo ve 1 m satın alma mesajı hiyerarşisi güçlendirilmeli." : "Mesafe hiyerarşisi korunurken logo/claim rekabeti azaltılabilir.",
+      distance < 70 ? "3 m logo ve 1 m satın alma mesajı hiyerarşisi güçlendirilmeli." : "Mesafe hiyerarşisi korunurken logo ve ana vaat arasındaki rekabet azaltılabilir.",
     ],
-    opportunities: ["Ürün görseli, logo ve ana claim arasındaki dikkat paylaşımı daha kontrollü hale getirilebilir."],
+    opportunities: ["Ürün görseli, logo ve ana vaat arasındaki dikkat paylaşımı daha kontrollü hale getirilebilir."],
     recommendations: [
-      "Ana claim'i daha kısa ve daha görünür bir satış mesajına dönüştür.",
-      "Logo çevresindeki görsel rekabeti azaltarak marka tanınmasını hızlandır.",
-      "Rakiplerle benzer kategori kodlarını korurken özgün grafik varlıkların ağırlığını artır.",
+      "Ana vaadi daha kısa ve daha görünür bir satış mesajına dönüştür.",
+      `${project.brandName} logosu çevresindeki görsel rekabeti azaltarak marka tanınmasını hızlandır.`,
+      `${project.competitor1BrandName} ve ${project.competitor2BrandName} ile benzer kategori kodlarını korurken özgün grafik varlıkların ağırlığını artır.`,
     ],
     shelfTests,
     singlePackAttention: {
