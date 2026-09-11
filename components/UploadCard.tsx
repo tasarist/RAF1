@@ -33,7 +33,7 @@ export function UploadCard({
       </div>
 
       <div className="preview">
-        {previewUrl ? <img src={previewUrl} alt={`${title} preview`} /> : null}
+        {previewUrl ? <img src={previewUrl} alt={`${title} önizleme`} /> : null}
       </div>
 
       <div className="uploadBottom">
