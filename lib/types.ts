@@ -4,6 +4,8 @@ export interface ProjectMeta {
   category: string;
   brandName: string;
   productName: string;
+  competitor1BrandName: string;
+  competitor2BrandName: string;
 }
 
 export interface ShelfTestResult {
