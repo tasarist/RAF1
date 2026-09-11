@@ -24,10 +24,21 @@ export async function POST(request: Request) {
       category: getText(form, "category"),
       brandName: getText(form, "brandName"),
       productName: getText(form, "productName"),
+      competitor1BrandName: getText(form, "competitor1BrandName"),
+      competitor2BrandName: getText(form, "competitor2BrandName"),
     };
 
-    if (!project.category || !project.brandName || !project.productName) {
-      return NextResponse.json({ error: "Kategori, marka ve ürün alanları zorunludur." }, { status: 400 });
+    if (
+      !project.category ||
+      !project.productName ||
+      !project.brandName ||
+      !project.competitor1BrandName ||
+      !project.competitor2BrandName
+    ) {
+      return NextResponse.json(
+        { error: "Kategori, ürün adı ve üç marka adı zorunludur." },
+        { status: 400 },
+      );
     }
 
     const files = [
@@ -53,7 +64,7 @@ export async function POST(request: Request) {
     const useMock = process.env.USE_MOCK_DATA !== "false";
     if (!useMock) {
       return NextResponse.json(
-        { error: "Canlı API adaptörleri v0.1'de etkin değil. USE_MOCK_DATA=true kullanın." },
+        { error: "Canlı API bağlantıları v0.1'de etkin değil. USE_MOCK_DATA=true kullanın." },
         { status: 501 },
       );
     }
