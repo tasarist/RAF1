@@ -24,6 +24,10 @@ function shelfLabel(layout: string) {
   return labels[layout] ?? layout.replaceAll("_", " ");
 }
 
+function metricValue(value?: number) {
+  return typeof value === "number" ? value : "Yok";
+}
+
 function MetricCard({ label, value, suffix = "/100", note, primary = false }: {
   label: string;
   value: number | null;
@@ -65,6 +69,7 @@ function Bar({ label, value }: { label: ReactNode; value: number }) {
 
 export function Results({ data }: { data: AnalyzeApiResponse }) {
   const r = data.result;
+  const isLive = r.source === "feng_gui";
   const shelfAverage = r.shelfTests.length
     ? Math.round((r.shelfTests.reduce((sum, x) => sum + x.mainAttentionShare, 0) / r.shelfTests.length) * 10) / 10
     : 0;
@@ -85,7 +90,9 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           <div className="eyebrow">Analiz sonucu</div>
           <h2>{data.project.brandName} · {data.project.productName}</h2>
         </div>
-        <div className="mockBadge">Demo veri · gerçek API henüz bağlı değil</div>
+        <div className={`mockBadge ${isLive ? "live" : ""}`}>
+          {isLive ? "Feng-GUI canlı veri · raf demo" : "Demo veri · gerçek API kapalı"}
+        </div>
       </div>
 
       <div className="resultHero">
@@ -108,7 +115,7 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
       <div className="scoreGrid expanded">
         <MetricCard label="Özgünlük" value={r.scores.uniqueness} note="Rakibe göre ayrışma" />
         <MetricCard label="Ürün Netliği" value={r.scores.productClarity} note="Ürün ve vaat netliği" />
-        <MetricCard label="Tekil Ambalaj Dikkati" value={r.scores.singlePackAttention} note="Dikkat yönetimi" />
+        <MetricCard label="Tekil Ambalaj Dikkati" value={r.scores.singlePackAttention} note={isLive ? "Feng-GUI verisi" : "Dikkat yönetimi"} />
         <MetricCard label="Dikkat ve Raf Etkisi" value={r.scores.attentionStandout} note="Raf + tekil performans" primary />
         <MetricCard label="Mesafe Netliği" value={r.scores.consumerDistanceClarity} note="5m / 3m / 1m akışı" />
         <MetricCard label="Süreklilik" value={r.scores.continuityConsistency} />
@@ -138,14 +145,22 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
         <article className="panel">
           <div className="panelTitle compact">
             <div>
-              <span>Attention Insight</span>
+              <span>{isLive ? "Feng-GUI" : "Demo attention"}</span>
               <h3>Tekil ambalaj sinyalleri</h3>
             </div>
           </div>
-          <div className="miniMetrics">
-            <div><span>Odak</span><strong>{attention?.focusScore ?? "Yok"}</strong></div>
-            <div><span>Netlik</span><strong>{attention?.clarityScore ?? "Yok"}</strong></div>
+          <div className="miniMetrics expanded">
+            <div><span>Genel</span><strong>{metricValue(attention?.overallScore)}</strong></div>
+            <div><span>Odak</span><strong>{metricValue(attention?.focusScore)}</strong></div>
+            <div><span>Netlik</span><strong>{metricValue(attention?.clarityScore)}</strong></div>
+            <div><span>Karmaşıklık</span><strong>{metricValue(attention?.complexityScore)}</strong></div>
           </div>
+          {attention?.heatmapUrl ? (
+            <div className="heatmapPreview">
+              <img src={attention.heatmapUrl} alt="Feng-GUI ısı haritası" />
+              <a href={attention.heatmapUrl} target="_blank" rel="noreferrer">Isı haritasını aç</a>
+            </div>
+          ) : null}
           <div className="aoiList">
             {attention?.aoi?.logo !== undefined ? <Bar label="Logo dikkati" value={attention.aoi.logo} /> : null}
             {attention?.aoi?.productName !== undefined ? <Bar label="Ürün adı" value={attention.aoi.productName} /> : null}
@@ -184,7 +199,11 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
       <div className="nextStepBox">
         <div>
           <span>Sonraki aşama</span>
-          <strong>Attention Insight API bağlandığında bu panel gerçek ısı haritası, odak haritası ve AOI yüzdeleriyle beslenecek.</strong>
+          <strong>
+            {isLive
+              ? "Feng-GUI tekil ambalaj verisi bağlandı. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek var."
+              : "Feng-GUI API canlı moda alındığında bu panel gerçek ısı haritası, odak skoru ve netlik skoru ile beslenecek."}
+          </strong>
         </div>
         <button className="button" type="button" disabled>Tasarımı Optimize Et · yakında</button>
       </div>
