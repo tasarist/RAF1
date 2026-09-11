@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./feng-gui.css";
 
 export const metadata: Metadata = {
   title: "5SE™ Packaging Intelligence",
