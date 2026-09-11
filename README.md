@@ -10,9 +10,10 @@ Bu paket doğrudan çalıştırılabilir/deploy edilebilir bir **Next.js prototi
 - `/api/analyze` backend doğrulaması
 - Deterministik mock 5SE skorları
 - 3 raf pozisyonu için mock attention share
+- Feng-GUI canlı tekil ambalaj analizi için hazır adapter
 - Strengths / issues / recommendations sonuç ekranı
 
-> **Önemli:** Attention Insight ve OpenAI henüz canlı bağlı değildir. v0.1'in amacı ürün akışını ve veri modelini doğrulamaktır.
+> **Önemli:** Varsayılan olarak demo modundadır. Feng-GUI canlı analiz için Vercel ortam değişkenleri eklenmeli ve Feng-GUI hesabında `api` rolü açık olmalıdır.
 
 ## Yerelde çalıştırma
 
@@ -32,18 +33,33 @@ http://localhost:3000
 
 ## Vercel'e yükleme — en kolay yöntem
 
-1. ZIP'i bilgisayarınızda açın.
-2. Klasörü GitHub'da yeni bir repository'ye yükleyin.
-3. Vercel hesabınızda **Add New → Project** deyin.
-4. GitHub repository'yi seçin.
-5. Vercel Next.js'i otomatik tanır.
-6. Environment Variable ekleyin:
+1. GitHub repository'yi Vercel projesi olarak seçin.
+2. Vercel Next.js'i otomatik tanır.
+3. Demo mod için Environment Variable ekleyin:
 
 ```text
 USE_MOCK_DATA=true
 ```
 
-7. Deploy'a basın.
+4. Deploy'a basın.
+
+## Feng-GUI canlı moda alma
+
+Feng-GUI tekil ambalaj analizini çalıştırmak için Vercel'de şu Environment Variable'ları ekleyin:
+
+```text
+USE_MOCK_DATA=false
+FENG_GUI_API_KEY=...
+FENG_GUI_SERVICE_URL=https://service.feng-gui.com
+FENG_GUI_USERNAME=...
+```
+
+Notlar:
+
+- `FENG_GUI_API_KEY` asla GitHub'a yazılmamalıdır.
+- Feng-GUI dokümanına göre `ImageAttention` kullanımı için hesapta `api` rolü gerekir.
+- Canlı modun bu sprintte yaptığı şey: ana ambalajı Feng-GUI ile analiz etmek, ısı haritası ve focus/clarity skorlarını sonuç ekranına taşımak.
+- Raf kıyaslaması bu sprintte hâlâ demo simülasyonla çalışır. Bir sonraki sprintte üç ambalajdan gerçek raf görseli üretip onu da Feng-GUI'ye göndereceğiz.
 
 ## `ai.tasarist.co` bağlama
 
@@ -55,13 +71,14 @@ Vercel size DNS tarafında eklemeniz gereken CNAME kaydını gösterecektir. Bu 
 
 ## Gelecek sprint
 
-1. Attention Insight gerçek API adaptörü
+1. Feng-GUI hesabında `api` rolünün açılması
 2. 3 otomatik shelf composite görseli
-3. AOI / heatmap verisi eşleştirme
-4. OpenAI Responses API + structured JSON
-5. 5m / 3m / 1m distance engine
-6. Sonra tek optimize tasarım + re-test
+3. Shelf görsellerini Feng-GUI ile canlı test etme
+4. AOI / heatmap verisi eşleştirme
+5. OpenAI Responses API + structured JSON
+6. 5m / 3m / 1m distance engine
+7. Sonra tek optimize tasarım + re-test
 
 ## Gizlilik
 
-Bu v0.1 yüklenen dosyaları kalıcı depolamaz. Sunucu isteği işler ve mock sonuç döndürür.
+Bu v0.1 yüklenen dosyaları kalıcı olarak bizim tarafta depolamaz. Feng-GUI canlı modda analiz edilen dosyalar Feng-GUI hesabının saklama politikasına göre orada tutulabilir; ticari kullanımdan önce veri saklama koşulları ayrıca netleştirilmelidir.
