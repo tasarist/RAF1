@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { analyzeSinglePackWithFengGui } from "@/lib/fengGui";
+import { createFengGuiBackedAnalysis } from "@/lib/liveAnalysis";
 import { createMockAnalysis } from "@/lib/mockAnalysis";
 import type { ProjectMeta } from "@/lib/types";
 
@@ -15,6 +17,10 @@ function getText(form: FormData, key: string) {
 function getImage(form: FormData, key: string) {
   const value = form.get(key);
   return value instanceof File ? value : null;
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Bilinmeyen hata oluştu.";
 }
 
 export async function POST(request: Request) {
@@ -61,16 +67,25 @@ export async function POST(request: Request) {
       }
     }
 
+    const fileNames = validFiles.map((file) => file.name);
     const useMock = process.env.USE_MOCK_DATA !== "false";
-    if (!useMock) {
-      return NextResponse.json(
-        { error: "Canlı API bağlantıları v0.1'de etkin değil. USE_MOCK_DATA=true kullanın." },
-        { status: 501 },
-      );
+
+    if (useMock) {
+      const result = createMockAnalysis(project, fileNames);
+      return NextResponse.json({ project, result });
     }
 
-    const result = createMockAnalysis(project, validFiles.map((file) => file.name));
-    return NextResponse.json({ project, result });
+    try {
+      const singlePackAttention = await analyzeSinglePackWithFengGui(validFiles[0]);
+      const result = createFengGuiBackedAnalysis(project, fileNames, singlePackAttention);
+      return NextResponse.json({ project, result });
+    } catch (error) {
+      console.error("Feng-GUI analysis failed", error);
+      return NextResponse.json(
+        { error: `Feng-GUI bağlantısı çalışmadı: ${errorMessage(error)}` },
+        { status: 502 },
+      );
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Analiz sırasında beklenmeyen bir hata oluştu." }, { status: 500 });
