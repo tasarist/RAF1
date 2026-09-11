@@ -136,11 +136,58 @@ button { cursor: pointer; }
 .nextStepBox { margin-top:14px; border:1px solid rgba(94,224,194,.28); background:rgba(94,224,194,.07); border-radius:8px; padding:18px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
 .nextStepBox strong { display:block; margin-top:6px; line-height:1.45; }
 .footer { padding: 30px 0 46px; color:var(--muted); font-size:12px; }
+.homeHero { padding: 74px 0 28px; }
+.homeHero h1 { margin:14px 0 18px; max-width:980px; font-size:clamp(42px, 7vw, 86px); line-height:1; letter-spacing:0; }
+.homeHero p { max-width:780px; margin:0; color:var(--muted); font-size:19px; line-height:1.65; }
+.homeVisual { display:grid; grid-template-columns:minmax(0, 1.35fr) minmax(320px, .65fr); gap:14px; align-items:stretch; margin:34px 0 28px; }
+.shelfMock, .scorePreview { border:1px solid var(--line); background:var(--panel); border-radius:8px; padding:20px; }
+.shelfMock { min-height:430px; display:flex; flex-direction:column; justify-content:space-between; }
+.shelfHeader { display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:13px; }
+.shelfHeader span { color:var(--accent); font-weight:800; text-transform:uppercase; }
+.shelfHeader strong { color:var(--text); }
+.packShelf { min-height:250px; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; align-items:end; padding:18px 8px 4px; border-bottom:10px solid rgba(255,255,255,.12); }
+.packMock { position:relative; min-height:230px; border:1px solid rgba(255,255,255,.2); border-radius:7px 7px 3px 3px; padding:16px 14px; display:flex; flex-direction:column; justify-content:flex-start; overflow:hidden; box-shadow:0 22px 38px rgba(0,0,0,.28); }
+.packMock span { position:relative; z-index:1; color:rgba(255,255,255,.76); font-size:11px; font-weight:850; }
+.packMock strong { position:relative; z-index:1; margin-top:18px; color:#fff; font-size:28px; line-height:1; letter-spacing:0; }
+.packMock em { position:relative; z-index:1; margin-top:8px; color:rgba(255,255,255,.86); font-size:14px; font-style:normal; }
+.mainPackMock { background:linear-gradient(155deg, #177867 0%, #169477 46%, #f2a833 47%, #f2a833 100%); transform:translateY(-10px); }
+.competitorPackMock.one { background:linear-gradient(155deg, #f07f30 0%, #f0a42b 50%, #2f8f74 51%, #2f8f74 100%); }
+.competitorPackMock.two { background:linear-gradient(155deg, #2d64a7 0%, #2a86b8 48%, #f0b842 49%, #f0b842 100%); }
+.packFruit { position:absolute; right:18px; bottom:18px; width:72px; height:72px; border-radius:50%; background:#ffcf6e; border:8px solid rgba(255,255,255,.24); box-shadow:0 0 0 10px rgba(255,207,110,.14); }
+.shelfBars { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; margin-top:18px; }
+.shelfBars div { position:relative; min-height:86px; overflow:hidden; border:1px solid var(--line); background:rgba(255,255,255,.04); border-radius:8px; padding:13px; }
+.shelfBars span { display:block; position:relative; z-index:1; color:var(--muted); font-size:12px; font-weight:800; }
+.shelfBars strong { display:block; position:relative; z-index:1; margin-top:8px; font-size:30px; }
+.shelfBars i { position:absolute; left:0; bottom:0; height:7px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.scorePreview { display:grid; gap:14px; }
+.previewScore { min-height:155px; border:1px solid rgba(94,224,194,.28); background:rgba(94,224,194,.08); border-radius:8px; display:grid; align-content:center; justify-items:center; }
+.previewScore span { color:var(--muted); font-size:13px; }
+.previewScore strong { font-size:78px; line-height:.95; }
+.previewScore em { color:var(--muted); font-style:normal; }
+.distancePreview { display:grid; grid-template-columns:1fr; gap:10px; }
+.distancePreview div, .issuePreview { border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.04); padding:14px; }
+.distancePreview span, .issuePreview span { display:block; color:var(--accent); font-size:12px; font-weight:850; text-transform:uppercase; }
+.distancePreview strong { display:block; margin-top:5px; font-size:17px; }
+.issuePreview p { margin:8px 0 0; color:var(--muted); line-height:1.55; font-size:14px; }
+.section.tight { padding-top:34px; padding-bottom:34px; }
+.sectionHeader { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:16px; }
+.sectionHeader span { color:var(--accent); font-size:12px; font-weight:850; text-transform:uppercase; }
+.sectionHeader h2 { max-width:720px; margin:0; font-size:clamp(26px, 4vw, 42px); line-height:1.08; letter-spacing:0; }
+.flowGrid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; }
+.flowCard, .methodItem { border:1px solid var(--line); background:var(--panel); border-radius:8px; padding:20px; }
+.flowCard span { display:grid; place-items:center; width:34px; height:34px; border-radius:8px; background:rgba(94,224,194,.13); color:var(--accent); font-weight:850; margin-bottom:34px; }
+.flowCard strong, .methodItem strong { display:block; font-size:17px; }
+.flowCard p, .methodItem p { margin:10px 0 0; color:var(--muted); font-size:14px; line-height:1.55; }
+.methodGrid { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:12px; }
+.methodItem { min-height:160px; }
 @media (max-width: 1040px) {
   .resultHero { grid-template-columns:1fr; }
   .heroScore { min-height:180px; }
   .scoreGrid.expanded { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .resultsColumns, .shelfList { grid-template-columns:1fr; }
+  .homeVisual { grid-template-columns:1fr; }
+  .flowGrid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .methodGrid { grid-template-columns:repeat(2, minmax(0,1fr)); }
   .span2 { grid-column:auto; }
 }
 @media (max-width: 920px) {
@@ -148,7 +195,14 @@ button { cursor: pointer; }
   .scoreGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .scoreGrid.expanded { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .hero { padding-top:48px; }
+  .homeHero { padding-top:48px; }
+  .sectionHeader { align-items:flex-start; flex-direction:column; }
   .uploadCard { min-height:310px; }
+}
+@media (max-width: 680px) {
+  .packShelf, .shelfBars, .flowGrid, .methodGrid { grid-template-columns:1fr; }
+  .packMock { min-height:170px; }
+  .mainPackMock { transform:none; }
 }
 @media (max-width: 560px) {
   .container { width:min(100% - 24px, 1160px); }
