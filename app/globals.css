@@ -49,6 +49,9 @@ button { cursor: pointer; }
 .pageTitle h1 { margin: 10px 0 12px; font-size: clamp(34px, 5vw, 60px); letter-spacing: 0; }
 .pageTitle p { margin:0; max-width:760px; color:var(--muted); line-height:1.6; }
 .formMeta { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin: 20px 0 18px; }
+.formMeta.projectMeta { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.formSectionLabel { margin:20px 0 10px; color:var(--accent); font-size:12px; font-weight:800; text-transform:uppercase; }
+.brandFieldGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:0 0 18px; }
 .field span { display:block; margin: 0 0 8px; color: #d3d3d0; font-size: 13px; }
 .field input { width:100%; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:8px; padding:13px 14px; outline:none; }
 .field input:focus { border-color: rgba(94,224,194,.75); box-shadow: 0 0 0 3px rgba(94,224,194,.10); }
@@ -111,6 +114,7 @@ button { cursor: pointer; }
 .barRow + .barRow { margin-top:12px; }
 .barTop { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; color:var(--muted); font-size:12px; }
 .barTop strong { color:#f7f4ee; }
+.barBrand { color:#f7f4ee; font-weight:800; }
 .barTrack { height:8px; border-radius:8px; background:rgba(255,255,255,.09); overflow:hidden; }
 .barFill { height:100%; border-radius:8px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
 .miniMetrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
@@ -140,7 +144,7 @@ button { cursor: pointer; }
   .span2 { grid-column:auto; }
 }
 @media (max-width: 920px) {
-  .grid3, .uploadGrid, .formMeta, .detailGrid, .detailGrid.refined, .diagnosisGrid { grid-template-columns:1fr; }
+  .grid3, .uploadGrid, .formMeta, .formMeta.projectMeta, .brandFieldGrid, .detailGrid, .detailGrid.refined, .diagnosisGrid { grid-template-columns:1fr; }
   .scoreGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .scoreGrid.expanded { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .hero { padding-top:48px; }
