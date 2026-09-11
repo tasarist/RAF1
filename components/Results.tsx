@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { AnalyzeApiResponse } from "@/lib/types";
 
 function scoreLabel(value: number) {
@@ -35,7 +36,7 @@ function MetricCard({ label, value, suffix = "/100", note, primary = false }: {
       <article className="scoreCard disabled">
         <div className="scoreLabel">{label}</div>
         <div>
-          <div className="scoreValue">N/A</div>
+          <div className="scoreValue">Yok</div>
           <div className="scoreLabel">Referans görsel yok</div>
         </div>
       </article>
@@ -53,7 +54,7 @@ function MetricCard({ label, value, suffix = "/100", note, primary = false }: {
   );
 }
 
-function Bar({ label, value }: { label: string; value: number }) {
+function Bar({ label, value }: { label: ReactNode; value: number }) {
   return (
     <div className="barRow">
       <div className="barTop"><span>{label}</span><strong>{value}%</strong></div>
@@ -64,23 +65,32 @@ function Bar({ label, value }: { label: string; value: number }) {
 
 export function Results({ data }: { data: AnalyzeApiResponse }) {
   const r = data.result;
-  const shelfAverage = Math.round((r.shelfTests.reduce((sum, x) => sum + x.mainAttentionShare, 0) / r.shelfTests.length) * 10) / 10;
-  const bestShelf = r.shelfTests.reduce((best, test) => test.mainAttentionShare > best.mainAttentionShare ? test : best, r.shelfTests[0]);
+  const shelfAverage = r.shelfTests.length
+    ? Math.round((r.shelfTests.reduce((sum, x) => sum + x.mainAttentionShare, 0) / r.shelfTests.length) * 10) / 10
+    : 0;
+  const bestShelf = r.shelfTests.length
+    ? r.shelfTests.reduce((best, test) => test.mainAttentionShare > best.mainAttentionShare ? test : best, r.shelfTests[0])
+    : null;
   const attention = r.singlePackAttention;
+  const brands = {
+    main: data.project.brandName || "Ana Tasarım",
+    competitor1: data.project.competitor1BrandName || "Rakip 1",
+    competitor2: data.project.competitor2BrandName || "Rakip 2",
+  };
 
   return (
     <section className="results">
       <div className="resultsHeader">
         <div>
-          <div className="eyebrow">Analysis result</div>
+          <div className="eyebrow">Analiz sonucu</div>
           <h2>{data.project.brandName} · {data.project.productName}</h2>
         </div>
-        <div className="mockBadge">Mock data · gerçek API henüz bağlı değil</div>
+        <div className="mockBadge">Demo veri · gerçek API henüz bağlı değil</div>
       </div>
 
       <div className="resultHero">
         <div className="heroScore">
-          <span>Overall 5SE Score</span>
+          <span>Genel 5SE Skoru</span>
           <strong>{r.scores.overall5seScore}</strong>
           <em>/100</em>
         </div>
@@ -89,19 +99,19 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           <p>{r.summary}</p>
         </div>
         <div className="heroStats">
-          <div><span>Shelf Index</span><strong>{r.scores.shelfPerformanceIndex}</strong></div>
-          <div><span>Avg. Attention Share</span><strong>{shelfAverage}%</strong></div>
-          <div><span>Best Position</span><strong>{shelfLabel(bestShelf.layout).replace("Ana tasarım ", "")}</strong></div>
+          <div><span>Raf Endeksi</span><strong>{r.scores.shelfPerformanceIndex}</strong></div>
+          <div><span>Ortalama Dikkat Payı</span><strong>{shelfAverage}%</strong></div>
+          <div><span>En İyi Konum</span><strong>{bestShelf ? shelfLabel(bestShelf.layout).replace("Ana tasarım ", "") : "Yok"}</strong></div>
         </div>
       </div>
 
       <div className="scoreGrid expanded">
-        <MetricCard label="Uniqueness" value={r.scores.uniqueness} note="Rakibe göre ayrışma" />
-        <MetricCard label="Product Clarity" value={r.scores.productClarity} note="Ürün ve vaat netliği" />
-        <MetricCard label="Single Pack Attention" value={r.scores.singlePackAttention} note="Tekil dikkat yönetimi" />
-        <MetricCard label="Attention & Stand-out" value={r.scores.attentionStandout} note="Raf + tekil performans" primary />
-        <MetricCard label="Distance Clarity" value={r.scores.consumerDistanceClarity} note="5m / 3m / 1m akışı" />
-        <MetricCard label="Continuity" value={r.scores.continuityConsistency} />
+        <MetricCard label="Özgünlük" value={r.scores.uniqueness} note="Rakibe göre ayrışma" />
+        <MetricCard label="Ürün Netliği" value={r.scores.productClarity} note="Ürün ve vaat netliği" />
+        <MetricCard label="Tekil Ambalaj Dikkati" value={r.scores.singlePackAttention} note="Dikkat yönetimi" />
+        <MetricCard label="Dikkat ve Raf Etkisi" value={r.scores.attentionStandout} note="Raf + tekil performans" primary />
+        <MetricCard label="Mesafe Netliği" value={r.scores.consumerDistanceClarity} note="5m / 3m / 1m akışı" />
+        <MetricCard label="Süreklilik" value={r.scores.continuityConsistency} />
       </div>
 
       <div className="resultsColumns">
@@ -109,17 +119,17 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           <div className="panelTitle">
             <div>
               <span>Raf performansı</span>
-              <h3>Üç pozisyonda dikkat payı</h3>
+              <h3>Üç konumda dikkat payı</h3>
             </div>
-            <strong>{r.scores.shelfPerformanceIndex} index</strong>
+            <strong>{r.scores.shelfPerformanceIndex} endeks</strong>
           </div>
           <div className="shelfList">
             {r.shelfTests.map((test) => (
               <div className="shelfItem" key={test.layout}>
                 <div className="shelfItemTitle">{shelfLabel(test.layout)}</div>
-                <Bar label="Your pack" value={test.mainAttentionShare} />
-                <Bar label="Competitor 1" value={test.competitor1AttentionShare} />
-                <Bar label="Competitor 2" value={test.competitor2AttentionShare} />
+                <Bar label={<strong className="barBrand">{brands.main}</strong>} value={test.mainAttentionShare} />
+                <Bar label={<strong className="barBrand">{brands.competitor1}</strong>} value={test.competitor1AttentionShare} />
+                <Bar label={<strong className="barBrand">{brands.competitor2}</strong>} value={test.competitor2AttentionShare} />
               </div>
             ))}
           </div>
@@ -133,29 +143,29 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
             </div>
           </div>
           <div className="miniMetrics">
-            <div><span>Focus</span><strong>{attention?.focusScore ?? "N/A"}</strong></div>
-            <div><span>Clarity</span><strong>{attention?.clarityScore ?? "N/A"}</strong></div>
+            <div><span>Odak</span><strong>{attention?.focusScore ?? "Yok"}</strong></div>
+            <div><span>Netlik</span><strong>{attention?.clarityScore ?? "Yok"}</strong></div>
           </div>
           <div className="aoiList">
-            {attention?.aoi?.logo !== undefined ? <Bar label="Logo attention" value={attention.aoi.logo} /> : null}
-            {attention?.aoi?.productName !== undefined ? <Bar label="Product name" value={attention.aoi.productName} /> : null}
-            {attention?.aoi?.mainClaim !== undefined ? <Bar label="Main claim" value={attention.aoi.mainClaim} /> : null}
-            {attention?.aoi?.productVisual !== undefined ? <Bar label="Product visual" value={attention.aoi.productVisual} /> : null}
+            {attention?.aoi?.logo !== undefined ? <Bar label="Logo dikkati" value={attention.aoi.logo} /> : null}
+            {attention?.aoi?.productName !== undefined ? <Bar label="Ürün adı" value={attention.aoi.productName} /> : null}
+            {attention?.aoi?.mainClaim !== undefined ? <Bar label="Ana vaat" value={attention.aoi.mainClaim} /> : null}
+            {attention?.aoi?.productVisual !== undefined ? <Bar label="Ürün görseli" value={attention.aoi.productVisual} /> : null}
           </div>
         </article>
       </div>
 
       <div className="diagnosisGrid">
         <article className="panel issuePanel critical">
-          <span>Critical</span>
+          <span>Kritik</span>
           <ul>{r.criticalIssues.map((x) => <li key={x}>{x}</li>)}</ul>
         </article>
         <article className="panel issuePanel important">
-          <span>Important</span>
+          <span>Önemli</span>
           <ul>{r.importantIssues.map((x) => <li key={x}>{x}</li>)}</ul>
         </article>
         <article className="panel issuePanel opportunity">
-          <span>Opportunity</span>
+          <span>Fırsat</span>
           <ul>{r.opportunities.map((x) => <li key={x}>{x}</li>)}</ul>
         </article>
       </div>
@@ -173,10 +183,10 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
 
       <div className="nextStepBox">
         <div>
-          <span>Sonraki sprint</span>
-          <strong>Attention Insight API bağlandığında bu panel gerçek heatmap, focus map ve AOI yüzdeleriyle beslenecek.</strong>
+          <span>Sonraki aşama</span>
+          <strong>Attention Insight API bağlandığında bu panel gerçek ısı haritası, odak haritası ve AOI yüzdeleriyle beslenecek.</strong>
         </div>
-        <button className="button" type="button" disabled>Optimize Design · yakında</button>
+        <button className="button" type="button" disabled>Tasarımı Optimize Et · yakında</button>
       </div>
     </section>
   );
