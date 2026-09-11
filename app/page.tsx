@@ -1,5 +1,20 @@
 import Link from "next/link";
 
+const criteria = [
+  ["Özgünlük", "Ambalajın iki rakibe göre ne kadar ayırt edici olduğunu ölçer."],
+  ["Süreklilik", "Eski ambalaj veya SKU yüklenirse marka ailesi tutarlılığını değerlendirir."],
+  ["Ürün Netliği", "Tüketicinin ürün ve ana vaadi hızlı anlayıp anlamadığını tahmin eder."],
+  ["Raf Etkisi", "Tekil dikkat performansını ve rakipli raftaki dikkat payını birleştirir."],
+  ["Mesafe Netliği", "5 metrede blok, 3 metrede logo, 1 metrede satış mesajını kontrol eder."],
+];
+
+const flow = [
+  ["1", "Ambalajları Yükle", "Ana tasarım ve iki rakip aynı analiz setine alınır."],
+  ["2", "Rafta Ölç", "Sistem üç farklı raf dizilimiyle konum etkisini azaltır."],
+  ["3", "5SE Skoru Al", "Özgünlük, ürün netliği, dikkat ve mesafe hiyerarşisi puanlanır."],
+  ["4", "Sorunu Gör", "Rapor güçlü yönleri, kritik problemleri ve geliştirme yönünü gösterir."],
+];
+
 export default function HomePage() {
   return (
     <main>
@@ -9,34 +24,98 @@ export default function HomePage() {
           <div className="navTag">MVP v0.1 · Demo motoru</div>
         </nav>
 
-        <section className="hero">
-          <div className="eyebrow">5 Raf Etkisi · Yapay Zeka Ambalaj Analizi</div>
-          <h1>Ambalajı rafta ölç. Sorunu bul. Daha güçlü tasarla.</h1>
+        <section className="homeHero">
+          <div className="eyebrow">5 Raf Etkisi · Ambalaj Performans Analizi</div>
+          <h1>Ambalaj tasarımını rakipleriyle birlikte rafta ölç.</h1>
           <p>
-            Ana ambalajınızı ve iki rakibi yükleyin. 5SE metodolojisi; özgünlük,
-            ürün netliği, dikkat ve raf etkisi ile mesafe hiyerarşisini tek bir
-            analiz akışında birleştirir.
+            5SE, tekil ambalaj dikkatini, rakipli raf performansını, ürün vaadinin
+            anlaşılırlığını ve 5m / 3m / 1m mesafe hiyerarşisini tek raporda toplar.
           </p>
           <div className="actions">
-            <Link className="button primary" href="/analyze">Yeni analiz başlat</Link>
-            <a className="button" href="#scope">MVP kapsamı</a>
+            <Link className="button primary" href="/analyze">Yeni Analiz Başlat</Link>
+            <a className="button" href="#rapor">Rapor Önizlemesi</a>
           </div>
         </section>
 
-        <section id="scope" className="section">
-          <div className="grid3">
-            <article className="feature">
-              <strong>1 · Yükle</strong>
-              <p>Ana tasarım + 2 rakip. Bu sürümde görseller yalnızca analiz isteği sırasında işlenir; kalıcı olarak kaydedilmez.</p>
-            </article>
-            <article className="feature">
-              <strong>2 · Analiz Et</strong>
-              <p>v0.1 gerçek API yerine deterministik demo sonuç üretir. Böylece kullanıcı deneyimini ve 5SE veri yapısını önce doğrularız.</p>
-            </article>
-            <article className="feature">
-              <strong>3 · Sonuçları Gör</strong>
-              <p>Genel 5SE skoru, dört zorunlu kriter, raf dikkat payları, güçlü yönler ve geliştirme önerileri görüntülenir.</p>
-            </article>
+        <section className="homeVisual" aria-label="5SE raf analizi önizlemesi">
+          <div className="shelfMock">
+            <div className="shelfHeader">
+              <span>Sanal raf testi</span>
+              <strong>Dikkat payı</strong>
+            </div>
+            <div className="packShelf">
+              <div className="packMock mainPackMock">
+                <span>ANA</span>
+                <strong>JUSS</strong>
+                <em>Portakal</em>
+                <div className="packFruit" />
+              </div>
+              <div className="packMock competitorPackMock one">
+                <span>RAKİP</span>
+                <strong>DİMES</strong>
+                <em>Portakal</em>
+                <div className="packFruit" />
+              </div>
+              <div className="packMock competitorPackMock two">
+                <span>RAKİP</span>
+                <strong>CAPPY</strong>
+                <em>Portakal</em>
+                <div className="packFruit" />
+              </div>
+            </div>
+            <div className="shelfBars">
+              <div><span>JUSS</span><strong>41%</strong><i style={{ width: "41%" }} /></div>
+              <div><span>DİMES</span><strong>34%</strong><i style={{ width: "34%" }} /></div>
+              <div><span>CAPPY</span><strong>25%</strong><i style={{ width: "25%" }} /></div>
+            </div>
+          </div>
+
+          <div className="scorePreview" id="rapor">
+            <div className="previewScore">
+              <span>Genel 5SE</span>
+              <strong>76</strong>
+              <em>/100</em>
+            </div>
+            <div className="distancePreview">
+              <div><span>5 m</span><strong>Marka bloğu</strong></div>
+              <div><span>3 m</span><strong>Logo</strong></div>
+              <div><span>1 m</span><strong>Satış mesajı</strong></div>
+            </div>
+            <div className="issuePreview">
+              <span>Kritik bulgu</span>
+              <p>Ana vaat ürün görselinin gerisinde kalıyor; satın alma mesajı daha net görünmeli.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section tight">
+          <div className="sectionHeader">
+            <span>Çalışma akışı</span>
+            <h2>Analiz, teşhis ve iyileştirme aynı omurgada birleşir.</h2>
+          </div>
+          <div className="flowGrid">
+            {flow.map(([number, title, body]) => (
+              <article className="flowCard" key={title}>
+                <span>{number}</span>
+                <strong>{title}</strong>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section tight">
+          <div className="sectionHeader">
+            <span>5SE metodolojisi</span>
+            <h2>Rapor yalnızca skor vermez; ambalajın nerede güç kaybettiğini açıklar.</h2>
+          </div>
+          <div className="methodGrid">
+            {criteria.map(([title, body]) => (
+              <article className="methodItem" key={title}>
+                <strong>{title}</strong>
+                <p>{body}</p>
+              </article>
+            ))}
           </div>
         </section>
 
