@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { analyzeSinglePackWithFengGui } from "@/lib/fengGui";
 import { createFengGuiBackedAnalysis } from "@/lib/liveAnalysis";
 import { createMockAnalysis } from "@/lib/mockAnalysis";
+import { enhanceAnalysisWithOpenAI } from "@/lib/openaiAnalysis";
 import type { ProjectMeta } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -86,7 +87,12 @@ export async function POST(request: Request) {
 
     try {
       const singlePackAttention = await analyzeSinglePackWithFengGui(validFiles[0]);
-      const result = createFengGuiBackedAnalysis(project, fileNames, singlePackAttention);
+      let result = createFengGuiBackedAnalysis(project, fileNames, singlePackAttention);
+      try {
+        result = await enhanceAnalysisWithOpenAI(project, fileNames, result);
+      } catch (error) {
+        console.error("OpenAI analysis enhancement failed", error);
+      }
       return NextResponse.json({ project, result });
     } catch (error) {
       console.error("Feng-GUI analysis failed", error);
