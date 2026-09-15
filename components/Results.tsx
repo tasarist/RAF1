@@ -165,8 +165,6 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
   const fengGuiVisuals = [
     { label: "Isı haritası", url: attention?.heatmapUrl, description: "Dikkatin yoğunlaştığı alanlar" },
     { label: "Gazeplot raporu", url: attention?.gazeplotReportUrl, description: "Bakış sırası ve odak noktaları" },
-    { label: "Opacity raporu", url: attention?.opacityReportUrl, description: "Görsel görünürlük filtresi" },
-    { label: "Dikkat haritası", url: attention?.rawAttentionUrl, description: "Ham dikkat dağılımı" },
   ].filter((visual): visual is { label: string; url: string; description: string } => Boolean(visual.url));
   const brands = {
     main: data.project.brandName || "Ana Tasarım",
