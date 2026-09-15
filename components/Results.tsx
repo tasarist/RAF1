@@ -149,7 +149,9 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           <h2>{data.project.brandName} · {data.project.productName}</h2>
         </div>
         <div className={`mockBadge ${isLive ? "live" : ""}`}>
-          {isLive ? "Feng-GUI canlı veri · raf demo" : "Demo veri · gerçek API kapalı"}
+          {r.aiEnhanced
+            ? "Feng-GUI + GPT yorum · raf demo"
+            : isLive ? "Feng-GUI canlı veri · raf demo" : "Demo veri · gerçek API kapalı"}
         </div>
       </div>
 
@@ -276,7 +278,9 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           <span>Sonraki aşama</span>
           <strong>
             {isLive
-              ? "Feng-GUI tekil ambalaj verisi bağlandı. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek var."
+              ? r.aiEnhanced
+                ? "Feng-GUI verisi GPT ile yorumlanıyor. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek ve ardından tasarım optimizasyon brief'ini üretmek var."
+                : "Feng-GUI tekil ambalaj verisi bağlandı. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek var."
               : "Feng-GUI API canlı moda alındığında bu panel gerçek ısı haritası, odak skoru ve netlik skoru ile beslenecek."}
           </strong>
         </div>
