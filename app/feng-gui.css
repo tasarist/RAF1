@@ -30,3 +30,116 @@
   font-size: 13px;
   font-weight: 760;
 }
+
+.fengGuiPanel {
+  border-color: rgba(114, 184, 255, 0.38);
+  background:
+    linear-gradient(150deg, rgba(33, 104, 170, 0.2), rgba(94, 224, 194, 0.08) 46%, rgba(255, 255, 255, 0.055));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+}
+
+.fengGuiPanel .panelTitle span {
+  color: #9bd6ff;
+}
+
+.fengGuiIntro {
+  margin: 0 0 16px;
+  border: 1px solid rgba(155, 214, 255, 0.26);
+  border-radius: 8px;
+  padding: 13px 14px;
+  background: rgba(12, 34, 55, 0.42);
+  color: #e7f4ff;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.fengMetricList {
+  display: grid;
+  gap: 11px;
+  margin-bottom: 14px;
+}
+
+.fengMetricBar {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.fengMetricTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.fengMetricTop strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+}
+
+.fengMetricTop span {
+  display: block;
+  margin-top: 4px;
+  color: #b9c7d3;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.fengMetricTop b {
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.fengTrack {
+  height: 9px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.fengTrack i {
+  display: block;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.fengMetricBar.good .fengTrack i { background: linear-gradient(90deg, #5ee0c2, #74dea8); }
+.fengMetricBar.solid .fengTrack i { background: linear-gradient(90deg, #72b8ff, #5ee0c2); }
+.fengMetricBar.warn .fengTrack i { background: linear-gradient(90deg, #ffcf6e, #f8a85e); }
+.fengMetricBar.danger .fengTrack i { background: linear-gradient(90deg, #ff8f78, #ffcf6e); }
+.fengMetricBar.muted .fengTrack i { background: rgba(255, 255, 255, 0.28); }
+
+.fengSecondaryMetrics {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.fengSecondaryMetrics div {
+  background: rgba(12, 34, 55, 0.32);
+}
+
+.fengReportLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.fengReportLinks a {
+  border: 1px solid rgba(155, 214, 255, 0.28);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: rgba(12, 34, 55, 0.38);
+  color: #d9efff;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+@media (max-width: 560px) {
+  .fengSecondaryMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
