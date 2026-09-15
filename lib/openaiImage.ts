@@ -43,7 +43,19 @@ function listItems(items: string[], limit = 4) {
   return safeItems.length ? safeItems.map((item) => `- ${item}`).join("\n") : "- Improve brand visibility, message hierarchy, contrast, and readability.";
 }
 
-export function buildOptimizedDesignPrompt(project: ProjectMeta, analysis: FiveSeAnalysisResult) {
+function sanitizeBrief(brief: string) {
+  return brief
+    .replace(/[<>]/g, "")
+    .replace(/\s+\n/g, "\n")
+    .trim()
+    .slice(0, 2400);
+}
+
+export function buildOptimizedDesignPrompt(project: ProjectMeta, analysis: FiveSeAnalysisResult, approvedBrief?: string) {
+  const brief = approvedBrief?.trim()
+    ? sanitizeBrief(approvedBrief)
+    : `Improvement recommendations:\n${listItems(analysis.recommendations)}`;
+
   return `You are a professional packaging graphic designer.
 
 Create one optimized packaging graphic design concept by editing only the visible 2D label/artwork on the uploaded pack image.
@@ -54,8 +66,8 @@ Product context:
 - Category: ${project.category}
 - Product: ${project.productName}
 
-Improvement recommendations:
-${listItems(analysis.recommendations)}
+Approved optimization brief:
+${brief}
 
 Design task:
 - Keep the same package silhouette, container proportions, cap/closure, perspective, shadows, and front-facing pack boundaries.
@@ -120,10 +132,11 @@ export async function generateOptimizedPackDesign(
   image: File,
   project: ProjectMeta,
   analysis: FiveSeAnalysisResult,
+  approvedBrief?: string,
 ): Promise<OptimizedDesignResult> {
   const model = getImageModel();
   const quality = getImageQuality();
-  const prompt = buildOptimizedDesignPrompt(project, analysis);
+  const prompt = buildOptimizedDesignPrompt(project, analysis, approvedBrief);
   let imageData: NonNullable<OpenAiImagePayload["data"]>[number];
   let usedPrompt = prompt;
 
