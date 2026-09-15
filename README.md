@@ -59,6 +59,7 @@ Notlar:
 - `FENG_GUI_API_KEY` asla GitHub'a yazılmamalıdır.
 - Feng-GUI dokümanına göre `ImageAttention` kullanımı için hesapta `api` rolü gerekir.
 - Canlı modun bu sprintte yaptığı şey: ana ambalajı Feng-GUI ile analiz etmek, ısı haritası ve focus/clarity skorlarını sonuç ekranına taşımak.
+- Canlı MVP'de Vercel yükleme sınırı nedeniyle her görseli yaklaşık 1.2 MB altında tutun. Büyük dosya desteğini sonraki sprintte doğrudan storage upload ile ekleyeceğiz.
 - Raf kıyaslaması bu sprintte hâlâ demo simülasyonla çalışır. Bir sonraki sprintte üç ambalajdan gerçek raf görseli üretip onu da Feng-GUI'ye göndereceğiz.
 
 ## `ai.tasarist.co` bağlama
