@@ -162,7 +162,7 @@ export default function AnalyzePage() {
           </div>
         </form>
 
-        {data ? <Results data={data} /> : null}
+        {data ? <Results data={data} mainPackFile={files.mainPack} /> : null}
         <footer className="footer">5SE™ MVP v0.1 · Prototip sürüm</footer>
       </div>
     </main>
