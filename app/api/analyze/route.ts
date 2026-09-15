@@ -7,7 +7,8 @@ import type { ProjectMeta } from "@/lib/types";
 export const runtime = "nodejs";
 
 const ALLOWED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
-const MAX_BYTES = 12 * 1024 * 1024;
+const MAX_BYTES = 1.2 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 3.5 * 1024 * 1024;
 
 function getText(form: FormData, key: string) {
   const value = form.get(key);
@@ -58,12 +59,20 @@ export async function POST(request: Request) {
     }
 
     const validFiles = files as File[];
+    const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+    if (totalSize > MAX_TOTAL_BYTES) {
+      return NextResponse.json(
+        { error: "Üç görselin toplamı 3.5 MB canlı MVP sınırını aşıyor." },
+        { status: 400 },
+      );
+    }
+
     for (const file of validFiles) {
       if (!ALLOWED_TYPES.has(file.type)) {
         return NextResponse.json({ error: `Desteklenmeyen dosya türü: ${file.name}` }, { status: 400 });
       }
       if (file.size > MAX_BYTES) {
-        return NextResponse.json({ error: `${file.name} 12 MB sınırını aşıyor.` }, { status: 400 });
+        return NextResponse.json({ error: `${file.name} 1.2 MB canlı MVP sınırını aşıyor.` }, { status: 400 });
       }
     }
 
