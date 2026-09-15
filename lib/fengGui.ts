@@ -184,6 +184,8 @@ export async function analyzeSinglePackWithFengGui(file: File): Promise<SinglePa
     memoryScore: score(analysis.memory),
     excitingScore: score(analysis.exciting),
     balanceScore: score(analysis.balance),
+    approachScore: score(analysis.approach),
+    withdrawScore: score(analysis.withdraw),
     hotspots: analysis.hotspots
       ?.filter((hotspot) => typeof hotspot.x === "number" && typeof hotspot.y === "number")
       .slice(0, 10)
