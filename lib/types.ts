@@ -39,6 +39,8 @@ export interface SinglePackAttentionResult {
   memoryScore?: number;
   excitingScore?: number;
   balanceScore?: number;
+  approachScore?: number;
+  withdrawScore?: number;
   hotspots?: AttentionHotspot[];
   aoi?: {
     logo?: number;
