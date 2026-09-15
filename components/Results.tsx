@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { AnalyzeApiResponse } from "@/lib/types";
+import type { AnalyzeApiResponse, SinglePackAttentionResult } from "@/lib/types";
 
 function scoreLabel(value: number) {
   if (value >= 80) return "Çok güçlü";
@@ -26,6 +26,27 @@ function shelfLabel(layout: string) {
 
 function metricValue(value?: number) {
   return typeof value === "number" ? value : "Yok";
+}
+
+function metricText(value?: number) {
+  return typeof value === "number" ? `${value}/100` : "veri yok";
+}
+
+function fengGuiSummary(attention?: SinglePackAttentionResult) {
+  if (!attention) {
+    return "Feng-GUI verisi henüz gelmediği için bu bölüm demo sinyallerle gösteriliyor. Canlı analizde genel etki, odak, netlik ve karmaşıklık değerleri burada birlikte yorumlanacak.";
+  }
+
+  return `Feng-GUI genel skoru ${metricText(attention.overallScore)}, ambalajın ilk bakışta oluşturduğu toplam dikkat etkisini gösterir. Odak ${metricText(attention.focusScore)} ve netlik ${metricText(attention.clarityScore)} değerleri, dikkatin doğru alanlarda toplanıp toplanmadığını ve tasarımın ne kadar kolay çözüldüğünü anlatır. Karmaşıklık ${metricText(attention.complexityScore)} seviyesindedir; bu değer yükseldikçe mesajın hızlı anlaşılması zorlaşabilir.`;
+}
+
+function fengMetricTone(value?: number, reverse = false) {
+  if (typeof value !== "number") return "muted";
+  const effective = reverse ? 100 - value : value;
+  if (effective >= 80) return "good";
+  if (effective >= 60) return "solid";
+  if (effective >= 40) return "warn";
+  return "danger";
 }
 
 function MetricCard({ label, value, suffix = "/100", note, primary = false }: {
@@ -67,6 +88,35 @@ function Bar({ label, value }: { label: ReactNode; value: number }) {
   );
 }
 
+function FengMetricBar({
+  label,
+  value,
+  description,
+  reverse = false,
+}: {
+  label: string;
+  value?: number;
+  description: string;
+  reverse?: boolean;
+}) {
+  const displayValue = typeof value === "number" ? value : 0;
+
+  return (
+    <div className={`fengMetricBar ${fengMetricTone(value, reverse)}`}>
+      <div className="fengMetricTop">
+        <div>
+          <strong>{label}</strong>
+          <span>{description}</span>
+        </div>
+        <b>{typeof value === "number" ? value : "Yok"}</b>
+      </div>
+      <div className="fengTrack">
+        <i style={{ width: `${Math.min(100, Math.max(0, displayValue))}%` }} />
+      </div>
+    </div>
+  );
+}
+
 export function Results({ data }: { data: AnalyzeApiResponse }) {
   const r = data.result;
   const isLive = r.source === "feng_gui";
@@ -77,6 +127,14 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
     ? r.shelfTests.reduce((best, test) => test.mainAttentionShare > best.mainAttentionShare ? test : best, r.shelfTests[0])
     : null;
   const attention = r.singlePackAttention;
+  const reportLinks = [
+    { label: "Isı haritası", url: attention?.heatmapUrl },
+    { label: "Dikkat haritası", url: attention?.rawAttentionUrl },
+    { label: "Opacity raporu", url: attention?.opacityReportUrl },
+    { label: "Gazeplot raporu", url: attention?.gazeplotReportUrl },
+    { label: "AOI raporu", url: attention?.aoiReportUrl },
+    { label: "Estetik raporu", url: attention?.aestheticsReportUrl },
+  ].filter((link): link is { label: string; url: string } => Boolean(link.url));
   const brands = {
     main: data.project.brandName || "Ana Tasarım",
     competitor1: data.project.competitor1BrandName || "Rakip 1",
@@ -142,23 +200,40 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
           </div>
         </article>
 
-        <article className="panel">
+        <article className="panel fengGuiPanel">
           <div className="panelTitle compact">
             <div>
-              <span>{isLive ? "Feng-GUI" : "Demo attention"}</span>
-              <h3>Tekil ambalaj sinyalleri</h3>
+              <span>{isLive ? "Feng-GUI canlı veri" : "Demo attention"}</span>
+              <h3>Tekil ambalaj dikkat analizi</h3>
             </div>
           </div>
-          <div className="miniMetrics expanded">
-            <div><span>Genel</span><strong>{metricValue(attention?.overallScore)}</strong></div>
-            <div><span>Odak</span><strong>{metricValue(attention?.focusScore)}</strong></div>
-            <div><span>Netlik</span><strong>{metricValue(attention?.clarityScore)}</strong></div>
-            <div><span>Karmaşıklık</span><strong>{metricValue(attention?.complexityScore)}</strong></div>
+          <p className="fengGuiIntro">{fengGuiSummary(attention)}</p>
+
+          <div className="fengMetricList">
+            <FengMetricBar label="Genel" value={attention?.overallScore} description="Toplam dikkat performansı" />
+            <FengMetricBar label="Odak" value={attention?.focusScore} description="Dikkatin ne kadar toplandığı" />
+            <FengMetricBar label="Netlik" value={attention?.clarityScore} description="Mesajın kolay çözülebilmesi" />
+            <FengMetricBar label="Karmaşıklık" value={attention?.complexityScore} description="Düşük olması daha iyidir" reverse />
+          </div>
+
+          <div className="miniMetrics expanded fengSecondaryMetrics">
+            <div><span>Hafıza</span><strong>{metricValue(attention?.memoryScore)}</strong></div>
+            <div><span>Yaklaşma</span><strong>{metricValue(attention?.approachScore)}</strong></div>
+            <div><span>Geri çekilme</span><strong>{metricValue(attention?.withdrawScore)}</strong></div>
+            <div><span>Heyecan</span><strong>{metricValue(attention?.excitingScore)}</strong></div>
+            <div><span>Denge</span><strong>{metricValue(attention?.balanceScore)}</strong></div>
           </div>
           {attention?.heatmapUrl ? (
             <div className="heatmapPreview">
               <img src={attention.heatmapUrl} alt="Feng-GUI ısı haritası" />
               <a href={attention.heatmapUrl} target="_blank" rel="noreferrer">Isı haritasını aç</a>
+            </div>
+          ) : null}
+          {reportLinks.length ? (
+            <div className="fengReportLinks">
+              {reportLinks.map((link) => (
+                <a key={link.label} href={link.url} target="_blank" rel="noreferrer">{link.label}</a>
+              ))}
             </div>
           ) : null}
           <div className="aoiList">
