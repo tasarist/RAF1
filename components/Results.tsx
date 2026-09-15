@@ -344,8 +344,8 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
           <span>Tasarım üret</span>
           <strong>
             {isLive
-              ? "Analizde çıkan kritik sorunlara göre tek bir optimize ambalaj konsepti oluşturulur. Bu çalışma üretime hazır artwork değil, tasarım yönünü test etmek için konsept çıktıdır."
-              : "Demo modda da optimize konsept üretilebilir; canlı veriyle daha doğru tasarım brief'i oluşur."}
+              ? "Analizde çıkan kritik sorunlara göre tek bir optimize grafik tasarım konsepti oluşturulur. Şişe/kutu oranı, ambalaj formu ve genel yapı korunur; yalnızca etiket, renk, tipografi ve mesaj hiyerarşisi iyileştirilir."
+              : "Demo modda da optimize grafik konsept üretilebilir; canlı veriyle daha doğru tasarım brief'i oluşur."}
           </strong>
         </div>
         <button className="button" type="button" onClick={optimizeDesign} disabled={!mainPackFile || optimizing}>
@@ -376,6 +376,7 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
           </div>
           <p className="designDisclaimer">
             Bu çıktı üretime hazır final artwork değildir; 5SE teşhisine göre oluşturulmuş test edilebilir tasarım konseptidir.
+            Ambalajın fiziksel formu ve oranları korunmalı; değişiklik yalnızca grafik tasarım yüzeyinde değerlendirilmelidir.
             Bir sonraki aşamada bu görsel tekrar Feng-GUI ile ölçülüp orijinal tasarımla karşılaştırılabilir.
           </p>
         </article>
