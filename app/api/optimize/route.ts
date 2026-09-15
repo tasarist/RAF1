@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     const mainPack = getImage(form, "mainPack");
     const projectText = getText(form, "project");
     const analysisText = getText(form, "analysis");
+    const designBrief = getText(form, "designBrief");
 
     if (!mainPack) {
       return NextResponse.json({ error: "Optimize tasarım için ana ambalaj görseli zorunludur." }, { status: 400 });
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
 
     const project = parseJson<ProjectMeta>(projectText, "Proje bilgisi");
     const analysis = parseJson<FiveSeAnalysisResult>(analysisText, "Analiz sonucu");
-    const result = await generateOptimizedPackDesign(mainPack, project, analysis);
+    const result = await generateOptimizedPackDesign(mainPack, project, analysis, designBrief);
 
     return NextResponse.json(result);
   } catch (error) {
