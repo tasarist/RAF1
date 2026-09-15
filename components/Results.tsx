@@ -1,5 +1,19 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
 import type { AnalyzeApiResponse, SinglePackAttentionResult } from "@/lib/types";
+
+type OptimizedDesign = {
+  optimizedImageUrl: string;
+  prompt: string;
+  model: string;
+  quality: string;
+  revisedPrompt?: string | null;
+};
+
+type OptimizeErrorResponse = {
+  error?: string;
+};
 
 function scoreLabel(value: number) {
   if (value >= 80) return "Çok güçlü";
@@ -117,8 +131,21 @@ function FengMetricBar({
   );
 }
 
-export function Results({ data }: { data: AnalyzeApiResponse }) {
+async function parseOptimizeResponse(response: Response): Promise<OptimizedDesign | OptimizeErrorResponse> {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  return { error: await response.text() || "Tasarım üretilemedi." };
+}
+
+export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; mainPackFile?: File | null }) {
   const r = data.result;
+  const [optimizing, setOptimizing] = useState(false);
+  const [optimizeError, setOptimizeError] = useState<string | null>(null);
+  const [optimizedDesign, setOptimizedDesign] = useState<OptimizedDesign | null>(null);
+  const [originalPreviewUrl, setOriginalPreviewUrl] = useState<string | null>(null);
   const isLive = r.source === "feng_gui";
   const shelfAverage = r.shelfTests.length
     ? Math.round((r.shelfTests.reduce((sum, x) => sum + x.mainAttentionShare, 0) / r.shelfTests.length) * 10) / 10
@@ -140,6 +167,45 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
     competitor1: data.project.competitor1BrandName || "Rakip 1",
     competitor2: data.project.competitor2BrandName || "Rakip 2",
   };
+
+  useEffect(() => {
+    if (!mainPackFile) {
+      setOriginalPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(mainPackFile);
+    setOriginalPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [mainPackFile]);
+
+  async function optimizeDesign() {
+    if (!mainPackFile) {
+      setOptimizeError("Optimize tasarım için ana ambalaj görseli bulunamadı. Lütfen analizi tekrar çalıştırın.");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("mainPack", mainPackFile);
+    form.append("project", JSON.stringify(data.project));
+    form.append("analysis", JSON.stringify(r));
+
+    try {
+      setOptimizing(true);
+      setOptimizeError(null);
+      const response = await fetch("/api/optimize", { method: "POST", body: form });
+      const json = await parseOptimizeResponse(response);
+      if (!response.ok) {
+        const message = "error" in json ? json.error : null;
+        throw new Error(message || "Tasarım üretilemedi.");
+      }
+      setOptimizedDesign(json as OptimizedDesign);
+    } catch (error) {
+      setOptimizeError(error instanceof Error ? error.message : "Beklenmeyen hata oluştu.");
+    } finally {
+      setOptimizing(false);
+    }
+  }
 
   return (
     <section className="results">
@@ -275,17 +341,45 @@ export function Results({ data }: { data: AnalyzeApiResponse }) {
 
       <div className="nextStepBox">
         <div>
-          <span>Sonraki aşama</span>
+          <span>Tasarım üret</span>
           <strong>
             {isLive
-              ? r.aiEnhanced
-                ? "Feng-GUI verisi GPT ile yorumlanıyor. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek ve ardından tasarım optimizasyon brief'ini üretmek var."
-                : "Feng-GUI tekil ambalaj verisi bağlandı. Sırada üç ambalajdan gerçek raf görseli üretip raf attention paylarını canlı ölçmek var."
-              : "Feng-GUI API canlı moda alındığında bu panel gerçek ısı haritası, odak skoru ve netlik skoru ile beslenecek."}
+              ? "Analizde çıkan kritik sorunlara göre tek bir optimize ambalaj konsepti oluşturulur. Bu çalışma üretime hazır artwork değil, tasarım yönünü test etmek için konsept çıktıdır."
+              : "Demo modda da optimize konsept üretilebilir; canlı veriyle daha doğru tasarım brief'i oluşur."}
           </strong>
         </div>
-        <button className="button" type="button" disabled>Tasarımı Optimize Et · yakında</button>
+        <button className="button" type="button" onClick={optimizeDesign} disabled={!mainPackFile || optimizing}>
+          {optimizing ? "Tasarım üretiliyor..." : "Tasarımı Optimize Et"}
+        </button>
       </div>
+
+      {optimizeError ? <div className="alert error optimizeAlert">{optimizeError}</div> : null}
+
+      {optimizedDesign ? (
+        <article className="optimizedDesignPanel">
+          <div className="panelTitle">
+            <div>
+              <span>Optimize tasarım konsepti</span>
+              <h3>Analiz yorumlarına göre üretilen yeni yön</h3>
+            </div>
+            <strong>{optimizedDesign.quality} kalite</strong>
+          </div>
+          <div className="beforeAfterGrid">
+            <div className="optimizedImageCard">
+              <span>Orijinal</span>
+              {originalPreviewUrl ? <img src={originalPreviewUrl} alt="Orijinal ambalaj" /> : <div className="imagePlaceholder">Orijinal görsel yok</div>}
+            </div>
+            <div className="optimizedImageCard featured">
+              <span>Optimize konsept</span>
+              <img src={optimizedDesign.optimizedImageUrl} alt="Optimize edilmiş ambalaj konsepti" />
+            </div>
+          </div>
+          <p className="designDisclaimer">
+            Bu çıktı üretime hazır final artwork değildir; 5SE teşhisine göre oluşturulmuş test edilebilir tasarım konseptidir.
+            Bir sonraki aşamada bu görsel tekrar Feng-GUI ile ölçülüp orijinal tasarımla karşılaştırılabilir.
+          </p>
+        </article>
+      ) : null}
     </section>
   );
 }
