@@ -64,6 +64,8 @@ export interface FiveSeScores {
 
 export interface FiveSeAnalysisResult {
   source?: AnalysisSource;
+  aiEnhanced?: boolean;
+  aiModel?: string;
   scores: FiveSeScores;
   summary: string;
   strengths: string[];
