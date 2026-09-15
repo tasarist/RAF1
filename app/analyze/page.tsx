@@ -129,7 +129,7 @@ export default function AnalyzePage() {
           <p>
             Ana tasarımınızı ve iki rakibi ekleyin. Marka adlarını elle girin;
             sonuç ekranında tüm raf karşılaştırmaları bu isimlerle gösterilir.
-            Canlı MVP için her görseli 1.2 MB altında tutun.
+            Canlı MVP için görselleri 1024×1024 piksel olarak hazırlayın ve her dosyayı 1.2 MB altında tutun.
           </p>
         </header>
 
@@ -140,9 +140,9 @@ export default function AnalyzePage() {
           </div>
 
           <div className="uploadGrid">
-            <UploadCard title="ANA TASARIM" subtitle="Test edilecek ambalaj" helper="Maks. 1.2 MB" file={files.mainPack} onChange={(f) => updateFile("mainPack", f)} />
-            <UploadCard title="RAKİP 1" subtitle="Karşılaştırma ambalajı" helper="Maks. 1.2 MB" file={files.competitor1} onChange={(f) => updateFile("competitor1", f)} />
-            <UploadCard title="RAKİP 2" subtitle="Karşılaştırma ambalajı" helper="Maks. 1.2 MB" file={files.competitor2} onChange={(f) => updateFile("competitor2", f)} />
+            <UploadCard title="ANA TASARIM" subtitle="Test edilecek ambalaj" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.mainPack} onChange={(f) => updateFile("mainPack", f)} />
+            <UploadCard title="RAKİP 1" subtitle="Karşılaştırma ambalajı" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.competitor1} onChange={(f) => updateFile("competitor1", f)} />
+            <UploadCard title="RAKİP 2" subtitle="Karşılaştırma ambalajı" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.competitor2} onChange={(f) => updateFile("competitor2", f)} />
           </div>
 
           <div className="formSectionLabel">Marka adları</div>
