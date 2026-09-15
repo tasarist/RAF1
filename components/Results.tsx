@@ -15,6 +15,11 @@ type OptimizeErrorResponse = {
   error?: string;
 };
 
+type OptimizationBriefResponse = {
+  brief: string;
+  model: string;
+};
+
 function scoreLabel(value: number) {
   if (value >= 80) return "Çok güçlü";
   if (value >= 60) return "Güçlü";
@@ -140,10 +145,22 @@ async function parseOptimizeResponse(response: Response): Promise<OptimizedDesig
   return { error: await response.text() || "Tasarım üretilemedi." };
 }
 
+async function parseOptimizationBriefResponse(response: Response): Promise<OptimizationBriefResponse | OptimizeErrorResponse> {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  return { error: await response.text() || "Brief oluşturulamadı." };
+}
+
 export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; mainPackFile?: File | null }) {
   const r = data.result;
+  const [briefLoading, setBriefLoading] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
   const [optimizeError, setOptimizeError] = useState<string | null>(null);
+  const [designBrief, setDesignBrief] = useState("");
+  const [briefModel, setBriefModel] = useState<string | null>(null);
   const [optimizedDesign, setOptimizedDesign] = useState<OptimizedDesign | null>(null);
   const [originalPreviewUrl, setOriginalPreviewUrl] = useState<string | null>(null);
   const isLive = r.source === "feng_gui";
@@ -183,9 +200,41 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
     return () => URL.revokeObjectURL(url);
   }, [mainPackFile]);
 
+  async function createOptimizationBrief() {
+    try {
+      setBriefLoading(true);
+      setOptimizeError(null);
+      setOptimizedDesign(null);
+      const response = await fetch("/api/optimize-brief", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project: JSON.stringify(data.project),
+          analysis: JSON.stringify(r),
+        }),
+      });
+      const json = await parseOptimizationBriefResponse(response);
+      if (!response.ok) {
+        const message = "error" in json ? json.error : null;
+        throw new Error(message || "Brief oluşturulamadı.");
+      }
+      const briefResponse = json as OptimizationBriefResponse;
+      setDesignBrief(briefResponse.brief);
+      setBriefModel(briefResponse.model);
+    } catch (error) {
+      setOptimizeError(error instanceof Error ? error.message : "Beklenmeyen hata oluştu.");
+    } finally {
+      setBriefLoading(false);
+    }
+  }
+
   async function optimizeDesign() {
     if (!mainPackFile) {
       setOptimizeError("Optimize tasarım için ana ambalaj görseli bulunamadı. Lütfen analizi tekrar çalıştırın.");
+      return;
+    }
+    if (!designBrief.trim()) {
+      setOptimizeError("Görsel üretmeden önce optimize tasarım brief'i oluşturulmalı ve onaylanmalıdır.");
       return;
     }
 
@@ -193,6 +242,7 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
     form.append("mainPack", mainPackFile);
     form.append("project", JSON.stringify(data.project));
     form.append("analysis", JSON.stringify(r));
+    form.append("designBrief", designBrief);
 
     try {
       setOptimizing(true);
@@ -355,19 +405,45 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
 
       <div className="nextStepBox">
         <div>
-          <span>Tasarım üret</span>
+          <span>Tasarım brief'i</span>
           <strong>
             {isLive
-              ? "Analizde çıkan kritik sorunlara göre tek bir optimize grafik tasarım konsepti oluşturulur. Çıktı 1024×1024 kalır; şişe/kutu oranı, ambalaj formu, kontur ve genel yapı korunur. Yalnızca etiket, renk, tipografi ve mesaj hiyerarşisi iyileştirilir."
-              : "Demo modda da optimize grafik konsept üretilebilir; canlı veriyle daha doğru tasarım brief'i oluşur."}
+              ? "Önce analiz sonuçlarına göre düzenlenebilir bir brief oluşturulur. Siz bu metni onayladıktan sonra görsel üretimi başlar."
+              : "Demo modda da düzenlenebilir brief oluşturulabilir; canlı veriyle daha doğru tasarım yönü çıkar."}
           </strong>
         </div>
-        <button className="button" type="button" onClick={optimizeDesign} disabled={!mainPackFile || optimizing}>
-          {optimizing ? "Tasarım üretiliyor..." : "Tasarımı Optimize Et"}
+        <button className="button" type="button" onClick={createOptimizationBrief} disabled={briefLoading || optimizing}>
+          {briefLoading ? "Brief oluşturuluyor..." : designBrief ? "Brief'i Yenile" : "Tasarımı Optimize Et"}
         </button>
       </div>
 
       {optimizeError ? <div className="alert error optimizeAlert">{optimizeError}</div> : null}
+
+      {designBrief ? (
+        <article className="optimizationBriefPanel">
+          <div className="panelTitle">
+            <div>
+              <span>Onay bekleyen brief</span>
+              <h3>Optimize tasarım yönü</h3>
+            </div>
+            {briefModel ? <strong>{briefModel}</strong> : null}
+          </div>
+          <p>
+            Bu metni gerekirse düzenleyin. Görsel üretimi, aşağıdaki onaylı brief'e göre yapılır.
+          </p>
+          <textarea
+            value={designBrief}
+            onChange={(event) => setDesignBrief(event.target.value)}
+            aria-label="Optimize tasarım brief'i"
+          />
+          <div className="briefActions">
+            <button className="button primary" type="button" onClick={optimizeDesign} disabled={!mainPackFile || optimizing || !designBrief.trim()}>
+              {optimizing ? "Görsel üretiliyor..." : "Brief'i Onayla ve Görsel Üret"}
+            </button>
+            <span>Ambalaj formu kilitli kabul edilir; görsel üretim yalnızca grafik yüzey için yönlendirilir.</span>
+          </div>
+        </article>
+      ) : null}
 
       {optimizedDesign ? (
         <article className="optimizedDesignPanel">
