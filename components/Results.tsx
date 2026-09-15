@@ -344,7 +344,7 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
           <span>Tasarım üret</span>
           <strong>
             {isLive
-              ? "Analizde çıkan kritik sorunlara göre tek bir optimize grafik tasarım konsepti oluşturulur. Şişe/kutu oranı, ambalaj formu ve genel yapı korunur; yalnızca etiket, renk, tipografi ve mesaj hiyerarşisi iyileştirilir."
+              ? "Analizde çıkan kritik sorunlara göre tek bir optimize grafik tasarım konsepti oluşturulur. Çıktı 1024×1024 kalır; şişe/kutu oranı, ambalaj formu, kontur ve genel yapı korunur. Yalnızca etiket, renk, tipografi ve mesaj hiyerarşisi iyileştirilir."
               : "Demo modda da optimize grafik konsept üretilebilir; canlı veriyle daha doğru tasarım brief'i oluşur."}
           </strong>
         </div>
@@ -376,7 +376,7 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
           </div>
           <p className="designDisclaimer">
             Bu çıktı üretime hazır final artwork değildir; 5SE teşhisine göre oluşturulmuş test edilebilir tasarım konseptidir.
-            Ambalajın fiziksel formu ve oranları korunmalı; değişiklik yalnızca grafik tasarım yüzeyinde değerlendirilmelidir.
+            Çıktı 1024×1024 formatında kalır. Ambalajın fiziksel formu, konturu ve oranları korunmalı; değişiklik yalnızca grafik tasarım yüzeyinde değerlendirilmelidir.
             Bir sonraki aşamada bu görsel tekrar Feng-GUI ile ölçülüp orijinal tasarımla karşılaştırılabilir.
           </p>
         </article>
