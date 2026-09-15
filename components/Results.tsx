@@ -162,6 +162,12 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
     { label: "AOI raporu", url: attention?.aoiReportUrl },
     { label: "Estetik raporu", url: attention?.aestheticsReportUrl },
   ].filter((link): link is { label: string; url: string } => Boolean(link.url));
+  const fengGuiVisuals = [
+    { label: "Isı haritası", url: attention?.heatmapUrl, description: "Dikkatin yoğunlaştığı alanlar" },
+    { label: "Gazeplot raporu", url: attention?.gazeplotReportUrl, description: "Bakış sırası ve odak noktaları" },
+    { label: "Opacity raporu", url: attention?.opacityReportUrl, description: "Görsel görünürlük filtresi" },
+    { label: "Dikkat haritası", url: attention?.rawAttentionUrl, description: "Ham dikkat dağılımı" },
+  ].filter((visual): visual is { label: string; url: string; description: string } => Boolean(visual.url));
   const brands = {
     main: data.project.brandName || "Ana Tasarım",
     competitor1: data.project.competitor1BrandName || "Rakip 1",
@@ -291,10 +297,20 @@ export function Results({ data, mainPackFile }: { data: AnalyzeApiResponse; main
             <div><span>Heyecan</span><strong>{metricValue(attention?.excitingScore)}</strong></div>
             <div><span>Denge</span><strong>{metricValue(attention?.balanceScore)}</strong></div>
           </div>
-          {attention?.heatmapUrl ? (
-            <div className="heatmapPreview">
-              <img src={attention.heatmapUrl} alt="Feng-GUI ısı haritası" />
-              <a href={attention.heatmapUrl} target="_blank" rel="noreferrer">Isı haritasını aç</a>
+          {fengGuiVisuals.length ? (
+            <div className="fengVisualGrid">
+              {fengGuiVisuals.map((visual) => (
+                <figure className="fengVisualCard" key={visual.label}>
+                  <div className="fengVisualImage">
+                    <img src={visual.url} alt={`Feng-GUI ${visual.label}`} />
+                  </div>
+                  <figcaption>
+                    <strong>{visual.label}</strong>
+                    <span>{visual.description}</span>
+                    <a href={visual.url} target="_blank" rel="noreferrer">Raporu aç</a>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           ) : null}
           {reportLinks.length ? (
