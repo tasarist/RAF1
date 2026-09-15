@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 export function UploadCard({
   title,
   subtitle,
+  helper,
   file,
   onChange,
 }: {
   title: string;
   subtitle: string;
+  helper?: string;
   file: File | null;
   onChange: (file: File | null) => void;
 }) {
@@ -37,7 +39,7 @@ export function UploadCard({
       </div>
 
       <div className="uploadBottom">
-        <div className="fileName">{file ? file.name : "PNG, JPG veya WEBP"}</div>
+        <div className="fileName">{file ? file.name : `PNG, JPG veya WEBP · ${helper ?? "görsel"}`}</div>
         <span className="uploadPill">{file ? "Görseli değiştir" : "Görsel yükle"}</span>
       </div>
 
