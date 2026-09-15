@@ -35,64 +35,57 @@ function getImageQuality() {
   return process.env.OPENAI_IMAGE_QUALITY?.trim() || "medium";
 }
 
-function listItems(items: string[]) {
-  return items.length ? items.map((item) => `- ${item}`).join("\n") : "- Veri yok";
+function listItems(items: string[], limit = 4) {
+  const safeItems = items
+    .slice(0, limit)
+    .map((item) => item.replace(/[<>]/g, "").trim())
+    .filter(Boolean);
+  return safeItems.length ? safeItems.map((item) => `- ${item}`).join("\n") : "- Improve brand visibility, message hierarchy, contrast, and readability.";
 }
 
 export function buildOptimizedDesignPrompt(project: ProjectMeta, analysis: FiveSeAnalysisResult) {
-  return `You are a senior FMCG packaging designer.
+  return `You are a professional packaging graphic designer.
 
-Create one optimized packaging design concept by editing only the 2D graphic design on the uploaded main pack image.
+Create one optimized packaging graphic design concept by editing only the visible 2D label/artwork on the uploaded pack image.
 
-The output canvas must be exactly square, matching the 1024x1024 reference format.
+Keep the output canvas square at 1024x1024.
 
 Product context:
 - Category: ${project.category}
-- Brand: ${project.brandName}
 - Product: ${project.productName}
-- Competitor 1: ${project.competitor1BrandName}
-- Competitor 2: ${project.competitor2BrandName}
-
-Current 5SE diagnosis:
-- Overall 5SE score: ${analysis.scores.overall5seScore}/100
-- Uniqueness: ${analysis.scores.uniqueness}/100
-- Product clarity: ${analysis.scores.productClarity}/100
-- Single pack attention: ${analysis.scores.singlePackAttention}/100
-- Attention & stand-out: ${analysis.scores.attentionStandout}/100
-- Consumer distance clarity: ${analysis.scores.consumerDistanceClarity}/100
-
-Critical issues:
-${listItems(analysis.criticalIssues)}
-
-Important issues:
-${listItems(analysis.importantIssues)}
 
 Improvement recommendations:
 ${listItems(analysis.recommendations)}
 
 Design task:
-- Preserve the existing brand identity, brand name, product category, main pack format, and recognizable visual assets.
-- Preserve the exact physical packaging structure: bottle/can/box shape, silhouette, proportions, cap/closure, container material impression, perspective, shadows, and front-facing pack boundaries.
-- The pack object must occupy the same approximate position, scale, width, height, and aspect ratio as the uploaded reference image.
-- Do not make the bottle taller, shorter, wider, narrower, slimmer, bulkier, more curved, more angular, or change the cap/body/label proportions.
-- Do not change the bottle ratio, box ratio, package shape, container height/width, cap size, label area geometry, product photo perspective, or general pack construction.
-- Treat the packaging form as locked. Only improve graphic design elements on the existing pack surface: label layout, color hierarchy, typography scale, claim visibility, contrast, visual clutter, and message hierarchy.
-- Do not create a completely new brand or unrelated product.
-- Improve the pack according to the diagnosis: clearer product promise, stronger logo/brand visibility, cleaner message hierarchy, reduced visual clutter, and stronger shelf impact.
+- Keep the same package silhouette, container proportions, cap/closure, perspective, shadows, and front-facing pack boundaries.
+- Keep the package object in the same approximate position, scale, width, height, and aspect ratio as the uploaded reference image.
+- Treat the physical packaging form as locked. Only change the flat graphic surface: label layout, color hierarchy, typography scale, claim visibility, contrast, clutter, and message hierarchy.
+- Preserve the existing visible brand/product cues where possible.
+- Do not add people, bodies, faces, hands, weapons, medical scenes, controlled substances, political content, sexual content, or violent content.
+- Do not create a new product category. Do not turn the package into a different container shape.
+- Improve clarity, shelf impact, logo visibility, and purchase-message readability.
 - Keep the design commercially realistic for a packaging concept.
 - Make the front face clean, readable, and suitable for another attention test.
-- If small regulatory text, barcode, or micro-copy is unclear, represent it as realistic placeholder detail rather than inventing legal claims.
 - Output only the optimized graphic design applied to the exact same packaging structure on a clean neutral background.`;
 }
 
-export async function generateOptimizedPackDesign(
-  image: File,
-  project: ProjectMeta,
-  analysis: FiveSeAnalysisResult,
-): Promise<OptimizedDesignResult> {
-  const model = getImageModel();
-  const quality = getImageQuality();
-  const prompt = buildOptimizedDesignPrompt(project, analysis);
+function buildSafeFallbackPrompt() {
+  return `Edit the uploaded packaging image as a clean commercial packaging graphic-design concept.
+
+Keep the exact same canvas size, pack silhouette, container proportions, cap/closure, perspective, shadows, and front-facing boundaries.
+Only adjust the 2D artwork on the pack surface: cleaner layout, stronger contrast, clearer hierarchy, improved readability, and more organized color blocks.
+Keep the product as the same type of packaged consumer good.
+Do not add people, bodies, faces, hands, weapons, medical scenes, controlled substances, political content, sexual content, or violent content.
+Do not change the bottle/can/box shape or physical structure.
+Output a single clean optimized pack concept on a neutral background.`;
+}
+
+function isSafetyRejection(message: string) {
+  return /safety system|rejected by the safety|safety/i.test(message);
+}
+
+async function requestImageEdit(image: File, prompt: string, model: string, quality: string) {
   const body = new FormData();
 
   body.append("model", model);
@@ -120,9 +113,43 @@ export async function generateOptimizedPackDesign(
     throw new Error("OpenAI optimize tasarım görseli döndürmedi.");
   }
 
+  return imageData;
+}
+
+export async function generateOptimizedPackDesign(
+  image: File,
+  project: ProjectMeta,
+  analysis: FiveSeAnalysisResult,
+): Promise<OptimizedDesignResult> {
+  const model = getImageModel();
+  const quality = getImageQuality();
+  const prompt = buildOptimizedDesignPrompt(project, analysis);
+  let imageData: NonNullable<OpenAiImagePayload["data"]>[number];
+  let usedPrompt = prompt;
+
+  try {
+    imageData = await requestImageEdit(image, prompt, model, quality);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (!isSafetyRejection(message)) {
+      throw error;
+    }
+
+    usedPrompt = buildSafeFallbackPrompt();
+    try {
+      imageData = await requestImageEdit(image, usedPrompt, model, quality);
+    } catch (fallbackError) {
+      const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : "";
+      if (isSafetyRejection(fallbackMessage)) {
+        throw new Error("OpenAI güvenlik filtresi bu görseli düzenlemeye izin vermedi. Lütfen üzerindeki metinleri daha sade, nötr ve net görünen 1024×1024 bir ambalaj görseliyle tekrar deneyin.");
+      }
+      throw fallbackError;
+    }
+  }
+
   return {
     optimizedImageUrl: `data:image/png;base64,${imageData.b64_json}`,
-    prompt,
+    prompt: usedPrompt,
     model,
     quality,
     revisedPrompt: imageData.revised_prompt ?? null,
