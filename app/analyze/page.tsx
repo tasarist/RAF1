@@ -120,7 +120,7 @@ export default function AnalyzePage() {
       <div className="container">
         <nav className="nav">
           <Link href="/" className="brand">5SE<span>™</span> Ambalaj Zekası</Link>
-          <div className="navTag">MVP v0.2 · Feng-GUI 4 rapor</div>
+          <div className="navTag">MVP v0.2 · Feng-GUI canlı</div>
         </nav>
 
         <header className="pageTitle">
