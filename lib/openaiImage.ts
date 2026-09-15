@@ -42,7 +42,7 @@ function listItems(items: string[]) {
 export function buildOptimizedDesignPrompt(project: ProjectMeta, analysis: FiveSeAnalysisResult) {
   return `You are a senior FMCG packaging designer.
 
-Create one optimized packaging design concept by editing the uploaded main pack image.
+Create one optimized packaging design concept by editing only the graphic design on the uploaded main pack image.
 
 Product context:
 - Category: ${project.category}
@@ -70,12 +70,15 @@ ${listItems(analysis.recommendations)}
 
 Design task:
 - Preserve the existing brand identity, brand name, product category, main pack format, and recognizable visual assets.
+- Preserve the exact physical packaging structure: bottle/can/box shape, silhouette, proportions, cap/closure, container material impression, perspective, and front-facing pack boundaries.
+- Do not change the bottle ratio, box ratio, package shape, container height/width, cap size, label area geometry, or general pack construction.
+- Only improve graphic design elements on the existing pack surface: label layout, color hierarchy, typography scale, claim visibility, contrast, visual clutter, and message hierarchy.
 - Do not create a completely new brand or unrelated product.
 - Improve the pack according to the diagnosis: clearer product promise, stronger logo/brand visibility, cleaner message hierarchy, reduced visual clutter, and stronger shelf impact.
 - Keep the design commercially realistic for a packaging concept.
 - Make the front face clean, readable, and suitable for another attention test.
 - If small regulatory text, barcode, or micro-copy is unclear, represent it as realistic placeholder detail rather than inventing legal claims.
-- Output only the optimized packaging design concept on a clean neutral background.`;
+- Output only the optimized graphic design applied to the same packaging structure on a clean neutral background.`;
 }
 
 export async function generateOptimizedPackDesign(
