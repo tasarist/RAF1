@@ -10,16 +10,16 @@ export function SiteFooter() {
               <span className="pa-logo-mark"><i>P</i><i>A</i></span>
               <span>Pack Analytic</span>
             </div>
-            <p>Packaging Performance Intelligence for better decisions before the shelf.</p>
+            <p>Rafa çıkmadan önce daha güçlü ambalaj kararları için Ambalaj Performans Zekâsı.</p>
           </div>
           <div className="pa-footer-links">
-            <div><strong>Platform</strong><Link href="/product">Product</Link><Link href="/how-it-works">How It Works</Link><Link href="/methodology">5SE™ Methodology</Link></div>
-            <div><strong>Use Cases</strong><Link href="/solutions">Solutions</Link><Link href="/insights">Insights</Link><Link href="/analyze">Analyze Your Pack</Link></div>
+            <div><strong>Platform</strong><Link href="/product">Ürün</Link><Link href="/how-it-works">Nasıl Çalışır</Link><Link href="/methodology">5SE™ Metodolojisi</Link></div>
+            <div><strong>Kullanım Alanları</strong><Link href="/solutions">Çözümler</Link><Link href="/insights">İçgörüler</Link><Link href="/analyze">Ambalajını Analiz Et</Link></div>
           </div>
         </div>
         <div className="pa-footer-bottom">
           <span>© 2026 Pack Analytic</span>
-          <span>packanalytic.com · Prototype</span>
+          <span>packanalytic.com · Prototip</span>
         </div>
       </div>
     </footer>
