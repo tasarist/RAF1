@@ -34,7 +34,7 @@ export default function HomePage() {
               <Link href="/how-it-works" className="pa2-secondary">See how it works</Link>
             </div>
             <div className="pa2-meta">
-              <span>AI-assisted</span><span>Packaging-specific</span><span>Competitive shelf context</span>
+              <span>Fast testing</span><span>Competitive benchmark</span><span>Actionable diagnosis</span>
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export default function HomePage() {
 
         <section className="pa2-system-line">
           <div className="container">
-            <span>Attention Data</span><i>×</i><span>Competitive Context</span><i>×</i><span>5SE™ Methodology</span><i>×</i><strong>AI Diagnosis</strong>
+            <span>Visual Attention</span><i>×</i><span>Shelf Context</span><i>×</i><span>5SE™ Methodology</span><i>×</i><strong>AI Diagnosis</strong>
           </div>
         </section>
 
@@ -102,7 +102,7 @@ export default function HomePage() {
           <div className="pa2-index">01</div>
           <div className="pa2-problem-copy">
             <div className="pa2-kicker"><i /> The problem</div>
-            <h2>Packaging is too important to be approved by instinct alone.</h2>
+            <h2>Packaging is too important to approve by instinct alone.</h2>
           </div>
           <div className="pa2-problem-body">
             <p>Brands want packaging that performs better than competitors, but traditional research is often too slow and costly for every design iteration.</p>
