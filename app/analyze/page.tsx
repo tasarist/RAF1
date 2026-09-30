@@ -133,7 +133,19 @@ export default function AnalyzePage() {
           </p>
         </header>
 
-        <form onSubmit={submit}>
+        <div className="analysis-steps" aria-label="Analiz adımları">
+          <div className="analysis-step"><span>01</span><strong>Proje bilgisi</strong><p>Kategori, ürün ve marka adlarını girin.</p></div>
+          <div className="analysis-step"><span>02</span><strong>3 ambalaj yükleyin</strong><p>Ana tasarım + iki gerçek rakip görseli.</p></div>
+          <div className="analysis-step"><span>03</span><strong>Sonucu karşılaştırın</strong><p>Skor, teşhis, raf kıyası ve iyileştirme önerileri.</p></div>
+        </div>
+
+        <section className="analysis-form-shell">
+          <div className="analysis-form-title">
+            <h2>Analiz girdileri</h2>
+            <span>Zorunlu alanlar · yaklaşık 2 dakika</span>
+          </div>
+
+          <form onSubmit={submit}>
           <div className="formMeta projectMeta">
             <Field label="Kategori" value={category} setValue={setCategory} placeholder="Örn. Meyve suyu" />
             <Field label="Ürün adı" value={productName} setValue={setProductName} placeholder="Örn. Portakal" />
@@ -158,9 +170,10 @@ export default function AnalyzePage() {
             <button className="button primary" type="submit" disabled={loading}>
               {loading ? "Analiz ediliyor..." : "Analiz Et"}
             </button>
-            <div className="statusNote">v0.1 dosyaları kalıcı depolamaz; büyük görseller bir sonraki sprintte desteklenecek.</div>
+            <div className="statusNote">Görseller kalıcı olarak saklanmaz. PNG, JPG veya WEBP · dosya başına maks. 1.2 MB.</div>
           </div>
-        </form>
+          </form>
+        </section>
 
         {data ? <Results data={data} mainPackFile={files.mainPack} /> : null}
         <footer className="footer">Pack Analytic · Prototip</footer>
