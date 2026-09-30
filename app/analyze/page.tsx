@@ -120,7 +120,7 @@ export default function AnalyzePage() {
       <div className="container">
         <nav className="nav">
           <Link href="/" className="brand">Pack Analytic</Link>
-          <div className="navTag">Packaging Intelligence · MVP</div>
+          <div className="navTag">Ambalaj Performans Zekâsı · MVP</div>
         </nav>
 
         <header className="pageTitle">
@@ -163,7 +163,7 @@ export default function AnalyzePage() {
         </form>
 
         {data ? <Results data={data} mainPackFile={files.mainPack} /> : null}
-        <footer className="footer">Pack Analytic · Prototype</footer>
+        <footer className="footer">Pack Analytic · Prototip</footer>
       </div>
     </main>
   );
