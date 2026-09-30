@@ -3,12 +3,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const solutions = [
-  ["New Packaging Design", "Test new packaging before print, production and launch commitments are made."],
-  ["Packaging Redesign", "Compare the redesign with the current pack and see whether the change really improves shelf performance."],
-  ["Competitor Benchmarking", "Understand where your pack is ahead, where it blends in and what competitors are doing better."],
-  ["Design Optimization", "Translate research signals into prioritized design actions and one improved direction."],
-  ["Portfolio / SKU Consistency", "Evaluate whether a product family works as one recognizable brand system without becoming repetitive."],
-  ["Agency Validation", "Give design teams a faster way to validate work before client presentation or final approval."],
+  ["Yeni Ambalaj Tasarımı", "Yeni ambalajı baskı, üretim ve lansman kararı verilmeden önce test edin."],
+  ["Ambalaj Yenileme", "Yeni tasarımı mevcut ambalajla karşılaştırın ve değişikliğin raf performansını gerçekten geliştirip geliştirmediğini görün."],
+  ["Rakip Benchmarking", "Ambalajınızın nerede önde olduğunu, nerede rakiplere benzediğini ve rakiplerin neyi daha iyi yaptığını anlayın."],
+  ["Tasarım Optimizasyonu", "Araştırma sinyallerini önceliklendirilmiş tasarım aksiyonlarına ve geliştirilmiş tek bir yöne dönüştürün."],
+  ["Portföy / SKU Tutarlılığı", "Ürün ailesinin tekrara düşmeden, tek ve tanınabilir bir marka sistemi olarak çalışıp çalışmadığını değerlendirin."],
+  ["Ajans Doğrulaması", "Tasarım ekiplerinin müşteri sunumu veya final onayı öncesinde çalışmalarını daha hızlı doğrulamasını sağlayın."],
 ];
 
 export default function SolutionsPage() {
@@ -17,9 +17,9 @@ export default function SolutionsPage() {
       <SiteHeader />
       <main className="pa-main">
         <section className="container pa-page-hero">
-          <div className="pa-kicker">Solutions</div>
-          <h1>Use Pack Analytic wherever packaging decisions carry risk.</h1>
-          <p>From early design development to redesign validation, competitive benchmarking and portfolio decisions.</p>
+          <div className="pa-kicker">Çözümler</div>
+          <h1>Ambalaj kararının risk taşıdığı her noktada Pack Analytic'i kullanın.</h1>
+          <p>Erken tasarım geliştirmeden redesign doğrulamasına, rakip kıyaslamasından portföy kararlarına kadar.</p>
         </section>
         <section className="container pa-solution-grid">
           {solutions.map(([title, body], i) => (
@@ -29,8 +29,8 @@ export default function SolutionsPage() {
           ))}
         </section>
         <section className="container pa-wide-cta">
-          <div><span>Packaging decisions, made earlier</span><h2>Reduce uncertainty before the shelf.</h2></div>
-          <Link href="/analyze" className="pa-button">Analyze Your Pack</Link>
+          <div><span>Ambalaj kararlarını daha erken verin</span><h2>Rafa çıkmadan önce belirsizliği azaltın.</h2></div>
+          <Link href="/analyze" className="pa-button">Ambalajını Analiz Et</Link>
         </section>
       </main>
       <SiteFooter />
