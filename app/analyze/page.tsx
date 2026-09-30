@@ -119,8 +119,8 @@ export default function AnalyzePage() {
     <main>
       <div className="container">
         <nav className="nav">
-          <Link href="/" className="brand">5SE<span>™</span> Ambalaj Zekası</Link>
-          <div className="navTag">MVP v0.2 · Feng-GUI canlı</div>
+          <Link href="/" className="brand">Pack Analytic</Link>
+          <div className="navTag">Packaging Intelligence · MVP</div>
         </nav>
 
         <header className="pageTitle">
@@ -163,7 +163,7 @@ export default function AnalyzePage() {
         </form>
 
         {data ? <Results data={data} mainPackFile={files.mainPack} /> : null}
-        <footer className="footer">5SE™ MVP v0.1 · Prototip sürüm</footer>
+        <footer className="footer">Pack Analytic · Prototype</footer>
       </div>
     </main>
   );
