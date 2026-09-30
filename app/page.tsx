@@ -3,17 +3,17 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const pillars = [
-  ["01", "Compete Better", "See how your packaging performs against the designs shoppers actually see beside it."],
-  ["02", "Reduce Risk", "Identify weak points before print, production and launch make them expensive."],
-  ["03", "Optimize Faster", "Turn data into clear design actions without waiting for a full research cycle."],
+  ["01", "Daha Güçlü Rekabet Et", "Ambalajınızın tüketicinin rafta gerçekten gördüğü rakiplerin yanında nasıl performans gösterdiğini görün."],
+  ["02", "Riski Azalt", "Baskı, üretim ve lansman öncesinde zayıf noktaları erkenden tespit edin."],
+  ["03", "Daha Hızlı Optimize Et", "Uzun araştırma süreçlerini beklemeden veriyi net tasarım aksiyonlarına dönüştürün."],
 ];
 
 const methodology = [
-  ["Distinctiveness", "82"],
-  ["Consistency", "76"],
-  ["Product Clarity", "71"],
-  ["Attention", "84"],
-  ["Distance", "68"],
+  ["Özgünlük", "82"],
+  ["Tutarlılık", "76"],
+  ["Ürün Netliği", "71"],
+  ["Dikkat", "84"],
+  ["Mesafe", "68"],
 ];
 
 export default function HomePage() {
@@ -23,33 +23,33 @@ export default function HomePage() {
       <main className="pa-main pa2-main">
         <section className="container pa2-hero">
           <div className="pa2-copy">
-            <div className="pa2-kicker"><i /> Packaging Performance Intelligence</div>
-            <h1>Make packaging <span>perform better</span> before it reaches the shelf.</h1>
+            <div className="pa2-kicker"><i /> Ambalaj Performans Zekâsı</div>
+            <h1>Ambalajınızı rafa çıkmadan önce <span>daha güçlü hale getirin.</span></h1>
             <p>
-              Pack Analytic tests your pack against competitors, diagnoses what limits its
-              performance, and turns the findings into clearer design decisions.
+              Ambalajınızı rakipleriyle test edin, neden kazandığını veya kaybettiğini görün
+              ve lansmandan önce neyi değiştirmeniz gerektiğini bilin.
             </p>
             <div className="pa2-actions">
-              <Link href="/analyze" className="pa2-primary">Analyze Your Pack <b>↗</b></Link>
-              <Link href="/how-it-works" className="pa2-secondary">See how it works</Link>
+              <Link href="/analyze" className="pa2-primary">Ambalajını Analiz Et <b>↗</b></Link>
+              <Link href="/how-it-works" className="pa2-secondary">Nasıl çalıştığını gör</Link>
             </div>
             <div className="pa2-meta">
-              <span>Fast testing</span><span>Competitive benchmark</span><span>Actionable diagnosis</span>
+              <span>Hızlı test</span><span>Rakip benchmark</span><span>Aksiyona dönük teşhis</span>
             </div>
           </div>
 
           <div className="pa2-console">
             <div className="pa2-console-head">
               <div>
-                <span>PROJECT</span>
-                <strong>Orange Juice / Concept 04</strong>
+                <span>PROJE</span>
+                <strong>Portakal Suyu / Konsept 04</strong>
               </div>
-              <div className="pa2-live"><i /> ANALYSIS READY</div>
+              <div className="pa2-live"><i /> ANALİZ HAZIR</div>
             </div>
 
             <div className="pa2-console-grid">
               <div className="pa2-score-panel">
-                <span>PACK ANALYTIC SCORE</span>
+                <span>PACK ANALYTIC SKORU</span>
                 <div className="pa2-score-ring">
                   <svg viewBox="0 0 140 140" aria-hidden="true">
                     <circle cx="70" cy="70" r="57" />
@@ -58,18 +58,18 @@ export default function HomePage() {
                   <strong>78</strong>
                   <small>/100</small>
                 </div>
-                <p>Strong shelf potential. One critical communication issue remains.</p>
+                <p>Güçlü raf potansiyeli. Çözülmesi gereken tek bir kritik iletişim sorunu var.</p>
               </div>
 
               <div className="pa2-shelf-panel">
-                <div className="pa2-panel-label"><span>COMPETITIVE SHELF</span><b>+26% vs equal share</b></div>
+                <div className="pa2-panel-label"><span>RAKİPLİ RAF TESTİ</span><b>Eşit paya göre +%26</b></div>
                 <div className="pa2-shelf">
-                  <div className="pa2-mini-pack rival"><span>RIVAL A</span><b>31%</b></div>
+                  <div className="pa2-mini-pack rival"><span>RAKİP A</span><b>31%</b></div>
                   <div className="pa2-mini-pack hero-pack">
-                    <span>YOUR PACK</span><b>42%</b>
+                    <span>SİZİN AMBALAJINIZ</span><b>42%</b>
                     <i className="heat heat-a" /><i className="heat heat-b" />
                   </div>
-                  <div className="pa2-mini-pack rival two"><span>RIVAL B</span><b>27%</b></div>
+                  <div className="pa2-mini-pack rival two"><span>RAKİP B</span><b>27%</b></div>
                 </div>
               </div>
             </div>
@@ -85,39 +85,39 @@ export default function HomePage() {
             </div>
 
             <div className="pa2-alert">
-              <span>01 / PRIORITY</span>
-              <p>Main benefit loses visibility at close range. Simplify the lower communication zone and increase claim hierarchy.</p>
-              <b>View diagnosis →</b>
+              <span>01 / ÖNCELİK</span>
+              <p>Ana fayda yakın mesafede görünürlüğünü kaybediyor. Alt iletişim alanını sadeleştirin ve claim hiyerarşisini güçlendirin.</p>
+              <b>Teşhisi gör →</b>
             </div>
           </div>
         </section>
 
         <section className="pa2-system-line">
           <div className="container">
-            <span>Visual Attention</span><i>×</i><span>Shelf Context</span><i>×</i><span>5SE™ Methodology</span><i>×</i><strong>AI Diagnosis</strong>
+            <span>Görsel Dikkat</span><i>×</i><span>Raf Bağlamı</span><i>×</i><span>5SE™ Metodolojisi</span><i>×</i><strong>Yapay Zekâ Teşhisi</strong>
           </div>
         </section>
 
         <section className="container pa2-problem">
           <div className="pa2-index">01</div>
           <div className="pa2-problem-copy">
-            <div className="pa2-kicker"><i /> The problem</div>
-            <h2>Packaging is too important to approve by instinct alone.</h2>
+            <div className="pa2-kicker"><i /> Problem</div>
+            <h2>Ambalaj, yalnızca sezgiyle onaylanamayacak kadar önemli.</h2>
           </div>
           <div className="pa2-problem-body">
-            <p>Brands want packaging that performs better than competitors, but traditional research is often too slow and costly for every design iteration.</p>
-            <p>Fast AI tools exist, but most are not built around the specific questions packaging must answer on shelf.</p>
-            <strong>Pack Analytic fills the gap between design and research.</strong>
+            <p>Markalar rakiplerinden daha güçlü ambalajlar istiyor; ancak geleneksel araştırmalar her tasarım iterasyonu için çoğu zaman fazla yavaş ve maliyetli.</p>
+            <p>Hızlı yapay zekâ araçları var, fakat çoğu ambalajın rafta cevaplaması gereken özel sorular için geliştirilmiş değil.</p>
+            <strong>Pack Analytic, tasarım ile araştırma arasındaki boşluğu doldurur.</strong>
           </div>
         </section>
 
         <section className="container pa2-pillar-section">
           <div className="pa2-section-head">
             <div>
-              <div className="pa2-kicker"><i /> Business value</div>
-              <h2>More confidence. Less guesswork.</h2>
+              <div className="pa2-kicker"><i /> İş değeri</div>
+              <h2>Daha fazla güven. Daha az tahmin.</h2>
             </div>
-            <p>Built for teams that need stronger packaging decisions without slowing the design process down.</p>
+            <p>Tasarım sürecini yavaşlatmadan daha güçlü ambalaj kararları almak isteyen ekipler için geliştirildi.</p>
           </div>
 
           <div className="pa2-pillars">
@@ -135,17 +135,17 @@ export default function HomePage() {
           <div className="container">
             <div className="pa2-section-head light">
               <div>
-                <div className="pa2-kicker"><i /> Closed-loop optimization</div>
-                <h2>Measure. Diagnose. Improve. Verify.</h2>
+                <div className="pa2-kicker"><i /> Kapalı döngü optimizasyon</div>
+                <h2>Ölç. Teşhis Et. Geliştir. Doğrula.</h2>
               </div>
-              <Link href="/how-it-works" className="pa2-inline-link">Explore workflow ↗</Link>
+              <Link href="/how-it-works" className="pa2-inline-link">Akışı incele ↗</Link>
             </div>
             <div className="pa2-process-track">
               {[
-                ["01","MEASURE","Your pack + competitors"],
-                ["02","DIAGNOSE","Why it wins or loses"],
-                ["03","IMPROVE","Prioritized design action"],
-                ["04","VERIFY","Re-test the new direction"],
+                ["01","ÖLÇ","Ambalajınız + rakipler"],
+                ["02","TEŞHİS ET","Neden kazanıyor veya kaybediyor?"],
+                ["03","GELİŞTİR","Önceliklendirilmiş tasarım aksiyonu"],
+                ["04","DOĞRULA","Yeni yönü tekrar test et"],
               ].map(([n,t,b]) => (
                 <article key={t}><span>{n}</span><h3>{t}</h3><p>{b}</p></article>
               ))}
@@ -155,18 +155,18 @@ export default function HomePage() {
 
         <section className="container pa2-method">
           <div className="pa2-method-copy">
-            <div className="pa2-kicker"><i /> Powered by 5SE™</div>
-            <h2>One framework for the five jobs packaging must do.</h2>
-            <p>Pack Analytic evaluates packaging as shoppers experience it: fighting for attention, recognition, understanding and preference in a competitive environment.</p>
-            <Link href="/methodology" className="pa2-inline-link">Explore methodology ↗</Link>
+            <div className="pa2-kicker"><i /> 5SE™ ile desteklenir</div>
+            <h2>Ambalajın yapması gereken beş işi tek çerçevede ölçer.</h2>
+            <p>Pack Analytic ambalajı tüketicinin deneyimlediği şekilde değerlendirir: rekabetçi bir ortamda dikkat çekmek, tanınmak, anlaşılmak ve tercihi desteklemek.</p>
+            <Link href="/methodology" className="pa2-inline-link">Metodolojiyi incele ↗</Link>
           </div>
           <div className="pa2-method-board">
             {[
-              ["01","Distinctiveness","Be recognizably different"],
-              ["02","Consistency","Preserve visual brand assets"],
-              ["03","Product Clarity","Explain what it is, fast"],
-              ["04","Attention & Stand-out","Win the first look"],
-              ["05","Consumer Distance","Work from 5m → 3m → 1m"],
+              ["01","Özgünlük","Rakiplerden ayırt edilebilir ol"],
+              ["02","Tutarlılık","Markanın görsel varlıklarını koru"],
+              ["03","Ürün Netliği","Ne olduğunu hızlı anlat"],
+              ["04","Dikkat ve Raf Etkisi","İlk bakışı kazan"],
+              ["05","Tüketici Mesafesi","5 m → 3 m → 1 m çalış"],
             ].map(([n,t,b]) => (
               <div key={t}><span>{n}</span><strong>{t}</strong><p>{b}</p></div>
             ))}
@@ -175,38 +175,38 @@ export default function HomePage() {
 
         <section className="container pa2-compare">
           <div className="pa2-compare-visual">
-            <div className="pa2-ruler"><span>5m</span><span>3m</span><span>1m</span></div>
+            <div className="pa2-ruler"><span>5 m</span><span>3 m</span><span>1 m</span></div>
             <div className="pa2-pack-row">
-              <div className="pack-box muted"><small>RIVAL A</small><b>31%</b></div>
-              <div className="pack-box focus"><small>YOUR PACK</small><b>42%</b><em>+26%</em></div>
-              <div className="pack-box muted alt"><small>RIVAL B</small><b>27%</b></div>
+              <div className="pack-box muted"><small>RAKİP A</small><b>31%</b></div>
+              <div className="pack-box focus"><small>SİZİN AMBALAJINIZ</small><b>42%</b><em>+26%</em></div>
+              <div className="pack-box muted alt"><small>RAKİP B</small><b>27%</b></div>
             </div>
           </div>
           <div className="pa2-compare-copy">
-            <div className="pa2-kicker"><i /> Competitive Shelf Intelligence</div>
-            <h2>Packaging does not compete on a screen.</h2>
-            <p>It competes next to other packs, under time pressure, at different viewing distances. Pack Analytic evaluates that context instead of treating your design as an isolated artwork.</p>
+            <div className="pa2-kicker"><i /> Rakipli Raf Zekâsı</div>
+            <h2>Ambalaj ekranda değil, rafta rekabet eder.</h2>
+            <p>Rakiplerinin yanında, sınırlı dikkat süresi içinde ve farklı mesafelerde rekabet eder. Pack Analytic tasarımınızı tek başına bir artwork olarak değil, bu gerçek bağlam içinde değerlendirir.</p>
           </div>
         </section>
 
         <section className="container pa2-action">
           <div>
-            <div className="pa2-kicker"><i /> From insight to action</div>
-            <h2>Don't stop at the score.</h2>
-            <p>Understand what is wrong, why it matters and what to change. Then re-test the new direction to see whether it actually improved.</p>
+            <div className="pa2-kicker"><i /> İçgörüden aksiyona</div>
+            <h2>Skorda durmayın.</h2>
+            <p>Neyin yanlış olduğunu, neden önemli olduğunu ve neyi değiştirmeniz gerektiğini görün. Ardından yeni yönü tekrar test ederek gerçekten gelişip gelişmediğini doğrulayın.</p>
           </div>
           <div className="pa2-before-after">
-            <article><span>ORIGINAL</span><strong>67</strong><small>Performance score</small></article>
+            <article><span>ORİJİNAL</span><strong>67</strong><small>Performans skoru</small></article>
             <i>→</i>
-            <article className="optimized"><span>OPTIMIZED</span><strong>81</strong><small>Re-tested result</small></article>
+            <article className="optimized"><span>OPTİMİZE</span><strong>81</strong><small>Yeniden test sonucu</small></article>
           </div>
         </section>
 
         <section className="container pa2-final">
-          <span>FROM DESIGN UNCERTAINTY TO SHELF CONFIDENCE</span>
-          <h2>Stop guessing what will work on shelf.</h2>
-          <p>Test it. Understand it. Improve it.</p>
-          <Link href="/analyze" className="pa2-primary">Analyze Your Pack <b>↗</b></Link>
+          <span>TASARIM BELİRSİZLİĞİNDEN RAF GÜVENİNE</span>
+          <h2>Rafta neyin işe yarayacağını tahmin etmeyi bırakın.</h2>
+          <p>Test edin. Anlayın. Geliştirin.</p>
+          <Link href="/analyze" className="pa2-primary">Ambalajını Analiz Et <b>↗</b></Link>
         </section>
       </main>
       <SiteFooter />
