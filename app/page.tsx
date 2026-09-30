@@ -2,159 +2,211 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
-const valueProps = [
-  ["Compete Better", "Test your packaging against real competitors and see whether it can win attention, recognition and clarity on shelf."],
-  ["Reduce Risk", "Find performance problems before print, production or launch commitments turn them into expensive mistakes."],
-  ["Optimize Faster", "Move from data to prioritized design actions without waiting weeks for every research iteration."],
+const pillars = [
+  ["01", "Compete Better", "See how your packaging performs against the designs shoppers actually see beside it."],
+  ["02", "Reduce Risk", "Identify weak points before print, production and launch make them expensive."],
+  ["03", "Optimize Faster", "Turn data into clear design actions without waiting for a full research cycle."],
 ];
 
 const methodology = [
-  ["01", "Distinctiveness", "Does the pack look recognizably different from competitors?"],
-  ["02", "Consistency", "Does it preserve the brand's visual DNA?"],
-  ["03", "Product Clarity", "Can shoppers quickly understand product and benefit?"],
-  ["04", "Attention & Stand-out", "Does it attract attention and compete on shelf?"],
-  ["05", "Consumer Distance", "Does 5m → 3m → 1m communication work?"],
+  ["Distinctiveness", "82"],
+  ["Consistency", "76"],
+  ["Product Clarity", "71"],
+  ["Attention", "84"],
+  ["Distance", "68"],
 ];
 
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="pa-main">
-        <section className="container pa-hero">
-          <div className="pa-hero-copy">
-            <div className="pa-kicker">Packaging Performance Intelligence</div>
-            <h1>Build packaging that <em>wins at shelf.</em></h1>
+      <main className="pa-main pa2-main">
+        <section className="container pa2-hero">
+          <div className="pa2-copy">
+            <div className="pa2-kicker"><i /> Packaging Performance Intelligence</div>
+            <h1>Make packaging <span>perform better</span> before it reaches the shelf.</h1>
             <p>
-              Test your packaging against competitors, identify what limits its performance,
-              and optimize it before launch.
+              Pack Analytic tests your pack against competitors, diagnoses what limits its
+              performance, and turns the findings into clearer design decisions.
             </p>
-            <div className="pa-hero-actions">
-              <Link href="/analyze" className="pa-button">Analyze Your Pack</Link>
-              <Link href="/how-it-works" className="pa-button pa-button-ghost">See How It Works</Link>
+            <div className="pa2-actions">
+              <Link href="/analyze" className="pa2-primary">Analyze Your Pack <b>↗</b></Link>
+              <Link href="/how-it-works" className="pa2-secondary">See how it works</Link>
             </div>
-            <div className="pa-hero-proof">
-              <span>Faster testing</span><i />
-              <span>Packaging-specific</span><i />
-              <span>Actionable diagnosis</span>
+            <div className="pa2-meta">
+              <span>AI-assisted</span><span>Packaging-specific</span><span>Competitive shelf context</span>
             </div>
           </div>
 
-          <div className="pa-hero-demo" aria-label="Pack Analytic result preview">
-            <div className="pa-demo-top">
-              <div><span>Pack Analytic Score</span><strong>78</strong><small>/100</small></div>
-              <b>Competitive shelf test</b>
+          <div className="pa2-console">
+            <div className="pa2-console-head">
+              <div>
+                <span>PROJECT</span>
+                <strong>Orange Juice / Concept 04</strong>
+              </div>
+              <div className="pa2-live"><i /> ANALYSIS READY</div>
             </div>
-            <div className="pa-shelf-stage">
-              <div className="pa-pack competitor"><span>RIVAL A</span><strong>31%</strong></div>
-              <div className="pa-pack main-pack"><span>YOUR PACK</span><strong>42%</strong><i className="pa-heat h1" /><i className="pa-heat h2" /></div>
-              <div className="pa-pack competitor second"><span>RIVAL B</span><strong>27%</strong></div>
+
+            <div className="pa2-console-grid">
+              <div className="pa2-score-panel">
+                <span>PACK ANALYTIC SCORE</span>
+                <div className="pa2-score-ring">
+                  <svg viewBox="0 0 140 140" aria-hidden="true">
+                    <circle cx="70" cy="70" r="57" />
+                    <circle className="progress" cx="70" cy="70" r="57" />
+                  </svg>
+                  <strong>78</strong>
+                  <small>/100</small>
+                </div>
+                <p>Strong shelf potential. One critical communication issue remains.</p>
+              </div>
+
+              <div className="pa2-shelf-panel">
+                <div className="pa2-panel-label"><span>COMPETITIVE SHELF</span><b>+26% vs equal share</b></div>
+                <div className="pa2-shelf">
+                  <div className="pa2-mini-pack rival"><span>RIVAL A</span><b>31%</b></div>
+                  <div className="pa2-mini-pack hero-pack">
+                    <span>YOUR PACK</span><b>42%</b>
+                    <i className="heat heat-a" /><i className="heat heat-b" />
+                  </div>
+                  <div className="pa2-mini-pack rival two"><span>RIVAL B</span><b>27%</b></div>
+                </div>
+              </div>
             </div>
-            <div className="pa-demo-metrics">
-              <div><span>Distinctiveness</span><strong>82</strong></div>
-              <div><span>Product Clarity</span><strong>71</strong></div>
-              <div><span>Attention</span><strong>84</strong></div>
+
+            <div className="pa2-metric-row">
+              {methodology.map(([label, value]) => (
+                <div key={label}>
+                  <span>{label}</span>
+                  <strong>{value}</strong>
+                  <i><b style={{ width: value + "%" }} /></i>
+                </div>
+              ))}
             </div>
-            <div className="pa-demo-finding">
-              <span>Priority issue</span>
-              <p>Main benefit loses visibility at 1m. Increase message hierarchy before launch.</p>
+
+            <div className="pa2-alert">
+              <span>01 / PRIORITY</span>
+              <p>Main benefit loses visibility at close range. Simplify the lower communication zone and increase claim hierarchy.</p>
+              <b>View diagnosis →</b>
             </div>
           </div>
         </section>
 
-        <section className="pa-trust-strip">
+        <section className="pa2-system-line">
           <div className="container">
-            <span>Research thinking</span><b>+</b><span>AI-powered analysis</span><b>+</b><span>Packaging methodology</span><b>=</b><strong>Better shelf decisions</strong>
+            <span>Attention Data</span><i>×</i><span>Competitive Context</span><i>×</i><span>5SE™ Methodology</span><i>×</i><strong>AI Diagnosis</strong>
           </div>
         </section>
 
-        <section className="container pa-problem">
-          <div className="pa-section-label">The problem</div>
-          <div className="pa-problem-grid">
-            <h2>Packaging decisions are still made with too much uncertainty.</h2>
+        <section className="container pa2-problem">
+          <div className="pa2-index">01</div>
+          <div className="pa2-problem-copy">
+            <div className="pa2-kicker"><i /> The problem</div>
+            <h2>Packaging is too important to be approved by instinct alone.</h2>
+          </div>
+          <div className="pa2-problem-body">
+            <p>Brands want packaging that performs better than competitors, but traditional research is often too slow and costly for every design iteration.</p>
+            <p>Fast AI tools exist, but most are not built around the specific questions packaging must answer on shelf.</p>
+            <strong>Pack Analytic fills the gap between design and research.</strong>
+          </div>
+        </section>
+
+        <section className="container pa2-pillar-section">
+          <div className="pa2-section-head">
             <div>
-              <p>Brands want more competitive packaging, but traditional research is often too slow and expensive for every design iteration.</p>
-              <p>General AI tools can be fast, but they are not built around the specific job packaging needs to do on shelf.</p>
-              <strong>Brands still go to shelf partially blind.</strong>
+              <div className="pa2-kicker"><i /> Business value</div>
+              <h2>More confidence. Less guesswork.</h2>
             </div>
+            <p>Built for teams that need stronger packaging decisions without slowing the design process down.</p>
           </div>
-        </section>
 
-        <section className="container pa-values">
-          <div className="pa-section-head">
-            <div><span>The value</span><h2>Compete better. Reduce risk. Optimize faster.</h2></div>
-            <p>Pack Analytic sits between design and research — giving teams faster evidence without removing strategic judgment.</p>
-          </div>
-          <div className="pa-value-grid">
-            {valueProps.map(([title, body], i) => (
-              <article key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{body}</p></article>
+          <div className="pa2-pillars">
+            {pillars.map(([n, title, body]) => (
+              <article key={title}>
+                <div className="pa2-card-top"><span>{n}</span><i>↗</i></div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
             ))}
           </div>
         </section>
 
-        <section className="pa-dark-band">
+        <section className="pa2-process-band">
           <div className="container">
-            <div className="pa-section-head inverse">
-              <div><span>How it works</span><h2>Measure. Diagnose. Improve. Verify.</h2></div>
-              <Link href="/how-it-works" className="pa-text-link">Explore the workflow →</Link>
+            <div className="pa2-section-head light">
+              <div>
+                <div className="pa2-kicker"><i /> Closed-loop optimization</div>
+                <h2>Measure. Diagnose. Improve. Verify.</h2>
+              </div>
+              <Link href="/how-it-works" className="pa2-inline-link">Explore workflow ↗</Link>
             </div>
-            <div className="pa-process">
+            <div className="pa2-process-track">
               {[
-                ["Measure", "Analyze the pack alone and against competitors."],
-                ["Diagnose", "Find what is limiting attention, clarity or distinctiveness."],
-                ["Improve", "Turn findings into prioritized design actions."],
-                ["Verify", "Re-test the optimized design and compare the result."],
-              ].map(([title, body], i) => (
-                <article key={title}><b>{i + 1}</b><h3>{title}</h3><p>{body}</p></article>
+                ["01","MEASURE","Your pack + competitors"],
+                ["02","DIAGNOSE","Why it wins or loses"],
+                ["03","IMPROVE","Prioritized design action"],
+                ["04","VERIFY","Re-test the new direction"],
+              ].map(([n,t,b]) => (
+                <article key={t}><span>{n}</span><h3>{t}</h3><p>{b}</p></article>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="container pa-method-section">
-          <div className="pa-section-head">
-            <div><span>Powered by 5SE™</span><h2>A methodology built for packaging performance.</h2></div>
-            <p>We evaluate packaging as a shopper experiences it: competing for attention, recognition, understanding and action.</p>
+        <section className="container pa2-method">
+          <div className="pa2-method-copy">
+            <div className="pa2-kicker"><i /> Powered by 5SE™</div>
+            <h2>One framework for the five jobs packaging must do.</h2>
+            <p>Pack Analytic evaluates packaging as shoppers experience it: fighting for attention, recognition, understanding and preference in a competitive environment.</p>
+            <Link href="/methodology" className="pa2-inline-link">Explore methodology ↗</Link>
           </div>
-          <div className="pa-method-grid">
-            {methodology.map(([n, title, body]) => (
-              <article key={title}><span>{n}</span><h3>{title}</h3><p>{body}</p></article>
+          <div className="pa2-method-board">
+            {[
+              ["01","Distinctiveness","Be recognizably different"],
+              ["02","Consistency","Preserve visual brand assets"],
+              ["03","Product Clarity","Explain what it is, fast"],
+              ["04","Attention & Stand-out","Win the first look"],
+              ["05","Consumer Distance","Work from 5m → 3m → 1m"],
+            ].map(([n,t,b]) => (
+              <div key={t}><span>{n}</span><strong>{t}</strong><p>{b}</p></div>
             ))}
           </div>
-          <Link href="/methodology" className="pa-text-link">Explore the 5SE™ methodology →</Link>
         </section>
 
-        <section className="container pa-competitive">
-          <div className="pa-competitive-copy">
-            <div className="pa-section-label">Competitive Shelf Intelligence</div>
-            <h2>Packaging does not compete on a screen. It competes on a shelf.</h2>
-            <p>Pack Analytic compares your design with competitors so you can see whether your brand registers, your product is understood and your message survives the shelf.</p>
+        <section className="container pa2-compare">
+          <div className="pa2-compare-visual">
+            <div className="pa2-ruler"><span>5m</span><span>3m</span><span>1m</span></div>
+            <div className="pa2-pack-row">
+              <div className="pack-box muted"><small>RIVAL A</small><b>31%</b></div>
+              <div className="pack-box focus"><small>YOUR PACK</small><b>42%</b><em>+26%</em></div>
+              <div className="pack-box muted alt"><small>RIVAL B</small><b>27%</b></div>
+            </div>
           </div>
-          <div className="pa-shelf-visual">
-            <div><span>A</span></div><div className="active"><span>YOUR PACK</span><b>+26%</b></div><div><span>B</span></div>
-            <i className="ring r1" /><i className="ring r2" /><i className="ring r3" />
+          <div className="pa2-compare-copy">
+            <div className="pa2-kicker"><i /> Competitive Shelf Intelligence</div>
+            <h2>Packaging does not compete on a screen.</h2>
+            <p>It competes next to other packs, under time pressure, at different viewing distances. Pack Analytic evaluates that context instead of treating your design as an isolated artwork.</p>
           </div>
         </section>
 
-        <section className="container pa-action-section">
-          <div className="pa-action-card">
-            <span>From insight to action</span>
-            <h2>Don't just measure your packaging. Improve it.</h2>
-            <p>Pack Analytic tells you what is wrong, why it matters and what to change — then helps verify whether the new direction performs better.</p>
-            <div className="pa-action-flow"><b>What is wrong</b><i>→</i><b>Why it matters</b><i>→</i><b>What to change</b></div>
+        <section className="container pa2-action">
+          <div>
+            <div className="pa2-kicker"><i /> From insight to action</div>
+            <h2>Don't stop at the score.</h2>
+            <p>Understand what is wrong, why it matters and what to change. Then re-test the new direction to see whether it actually improved.</p>
           </div>
-          <div className="pa-before-after">
-            <div><span>Original</span><strong>67</strong><small>Performance score</small></div>
+          <div className="pa2-before-after">
+            <article><span>ORIGINAL</span><strong>67</strong><small>Performance score</small></article>
             <i>→</i>
-            <div className="after"><span>Optimized</span><strong>81</strong><small>Re-tested result</small></div>
+            <article className="optimized"><span>OPTIMIZED</span><strong>81</strong><small>Re-tested result</small></article>
           </div>
         </section>
 
-        <section className="container pa-final-cta">
-          <div className="pa-kicker">From design uncertainty to shelf confidence.</div>
+        <section className="container pa2-final">
+          <span>FROM DESIGN UNCERTAINTY TO SHELF CONFIDENCE</span>
           <h2>Stop guessing what will work on shelf.</h2>
           <p>Test it. Understand it. Improve it.</p>
-          <Link href="/analyze" className="pa-button">Analyze Your Pack</Link>
+          <Link href="/analyze" className="pa2-primary">Analyze Your Pack <b>↗</b></Link>
         </section>
       </main>
       <SiteFooter />
