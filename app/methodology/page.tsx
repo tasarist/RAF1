@@ -3,11 +3,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const dimensions = [
-  ["01", "Distinctiveness", "How different and recognizable is the pack compared with its competitors?"],
-  ["02", "Consistency", "Does the design preserve and strengthen the brand's visual DNA across time and portfolio?"],
-  ["03", "Product Clarity", "Can shoppers quickly understand the category, variant and core benefit?"],
-  ["04", "Attention & Stand-out", "Does the pack attract attention on its own and compete effectively on shelf?"],
-  ["05", "Consumer Distance", "Does the communication work in sequence: 5m brand block, 3m logo, 1m purchase message?"],
+  ["01", "Özgünlük", "Ambalaj rakiplerine göre ne kadar farklı, ayırt edilebilir ve tanınabilir?"],
+  ["02", "Tutarlılık", "Tasarım markanın görsel DNA'sını zaman içinde ve ürün portföyünde koruyup güçlendiriyor mu?"],
+  ["03", "Ürün Netliği", "Tüketici kategori, varyant ve temel faydayı hızlıca anlayabiliyor mu?"],
+  ["04", "Dikkat ve Raf Etkisi", "Ambalaj tek başına dikkat çekiyor ve rafta rakipleriyle etkili biçimde rekabet edebiliyor mu?"],
+  ["05", "Tüketici Mesafesi", "İletişim sırası doğru çalışıyor mu: 5 m marka bloğu, 3 m logo, 1 m satın alma mesajı?"],
 ];
 
 export default function MethodologyPage() {
@@ -16,9 +16,9 @@ export default function MethodologyPage() {
       <SiteHeader />
       <main className="pa-main">
         <section className="container pa-page-hero">
-          <div className="pa-kicker">5SE™ Methodology</div>
-          <h1>A packaging performance framework built for the shelf.</h1>
-          <p>5SE™ is Pack Analytic's proprietary framework for turning attention signals, competitive context and packaging principles into a structured diagnosis.</p>
+          <div className="pa-kicker">5SE™ Metodolojisi</div>
+          <h1>Raf için geliştirilmiş bir ambalaj performans çerçevesi.</h1>
+          <p>5SE™, dikkat sinyallerini, rekabet bağlamını ve ambalaj tasarımı prensiplerini yapılandırılmış bir teşhise dönüştüren Pack Analytic'e ait metodolojidir.</p>
         </section>
 
         <section className="container pa-methodology-stack">
@@ -33,10 +33,10 @@ export default function MethodologyPage() {
         </section>
 
         <section className="container pa-method-note">
-          <div className="pa-kicker">A practical principle</div>
-          <h2>We evaluate packaging as a shopper experiences it.</h2>
-          <p>Not as a flat artwork on a designer's screen, but as a competing object that must be noticed, recognized, understood and acted on.</p>
-          <Link href="/product" className="pa-text-link">Explore the product →</Link>
+          <div className="pa-kicker">Temel prensip</div>
+          <h2>Ambalajı tüketicinin deneyimlediği şekilde değerlendiriyoruz.</h2>
+          <p>Tasarımcının ekranındaki düz bir artwork olarak değil; fark edilmesi, tanınması, anlaşılması ve satın alma kararını desteklemesi gereken rekabetçi bir raf öğesi olarak.</p>
+          <Link href="/product" className="pa-text-link">Ürünü incele →</Link>
         </section>
       </main>
       <SiteFooter />
