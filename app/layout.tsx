@@ -3,13 +3,13 @@ import "./globals.css";
 import "./feng-gui.css";
 
 export const metadata: Metadata = {
-  title: "5SE™ Packaging Intelligence",
-  description: "Packaging analysis prototype based on the 5 Shelf Effect methodology.",
+  title: "Pack Analytic — Packaging Performance Intelligence",
+  description: "Test packaging against competitors, diagnose shelf performance and optimize before launch.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="tr">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
