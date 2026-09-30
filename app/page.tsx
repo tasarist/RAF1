@@ -98,6 +98,54 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="container pa2-output-section" id="ornek-rapor">
+          <div className="pa2-section-head">
+            <div>
+              <div className="pa2-kicker"><i /> Bir analiz sonunda</div>
+              <h2>Skor değil, karar aldıran bir çıktı alın.</h2>
+            </div>
+            <p>Pack Analytic sonucu yalnızca “iyi / kötü” demez. Nerede kaybettiğinizi, nedenini ve neyi değiştirmeniz gerektiğini tek akışta gösterir.</p>
+          </div>
+
+          <div className="pa2-output-grid">
+            <article className="pa2-output-card pa2-output-score">
+              <div className="pa2-output-card-top"><span>01</span><b>5SE™ SCORECARD</b></div>
+              <div className="pa2-output-big-number">78<small>/100</small></div>
+              <p>Özgünlük, ürün netliği, dikkat, mesafe ve tutarlılık aynı sistem içinde okunur.</p>
+            </article>
+
+            <article className="pa2-output-card pa2-output-shelf">
+              <div className="pa2-output-card-top"><span>02</span><b>RAF KIYASI</b></div>
+              <div className="pa2-output-bars">
+                <div><span>Sizin ambalajınız</span><i><b style={{ width: "84%" }} /></i><strong>42%</strong></div>
+                <div><span>Rakip A</span><i><b style={{ width: "62%" }} /></i><strong>31%</strong></div>
+                <div><span>Rakip B</span><i><b style={{ width: "54%" }} /></i><strong>27%</strong></div>
+              </div>
+              <p>Rakipler arasında nerede durduğunuzu tek bakışta görün.</p>
+            </article>
+
+            <article className="pa2-output-card pa2-output-priority">
+              <div className="pa2-output-card-top"><span>03</span><b>ÖNCELİKLİ TEŞHİS</b></div>
+              <div className="pa2-priority-list">
+                <div className="critical"><i /> <span>Ana fayda 1 m iletişiminde zayıf</span></div>
+                <div className="important"><i /> <span>Logo çevresinde görsel rekabet yüksek</span></div>
+                <div className="opportunity"><i /> <span>Distinctive asset daha baskın kullanılabilir</span></div>
+              </div>
+              <p>Kritik sorun, önemli konu ve fırsatlar birbirinden ayrılır.</p>
+            </article>
+
+            <article className="pa2-output-card pa2-output-action">
+              <div className="pa2-output-card-top"><span>04</span><b>TASARIM AKSİYONU</b></div>
+              <ol>
+                <li>Ana claim'i sadeleştir</li>
+                <li>Logo çevresini temizle</li>
+                <li>Rakiplerden ayrışan grafik varlığı güçlendir</li>
+              </ol>
+              <p>Analiz doğrudan tasarım kararına dönüşür.</p>
+            </article>
+          </div>
+        </section>
+
         <section className="container pa2-problem">
           <div className="pa2-index">01</div>
           <div className="pa2-problem-copy">
@@ -209,6 +257,10 @@ export default function HomePage() {
           <Link href="/analyze" className="pa2-primary">Ambalajını Analiz Et <b>↗</b></Link>
         </section>
       </main>
+      <div className="pa2-mobile-sticky">
+        <div><span>Pack Analytic</span><small>Rafa çıkmadan önce test et</small></div>
+        <Link href="/analyze">Analiz Et ↗</Link>
+      </div>
       <SiteFooter />
     </>
   );
