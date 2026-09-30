@@ -3,10 +3,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const steps = [
-  ["01", "Measure", "Upload your pack and competitors. Pack Analytic evaluates visual attention, shelf performance, distinctiveness, clarity and distance hierarchy."],
-  ["02", "Diagnose", "The system explains why the pack is winning or losing and separates critical issues from secondary opportunities."],
-  ["03", "Improve", "Turn the diagnosis into prioritized design actions and one focused optimization direction."],
-  ["04", "Verify", "Re-test the optimized design against the original and competitors to see whether performance improved."],
+  ["01", "Ölç", "Ambalajınızı ve rakiplerini yükleyin. Pack Analytic görsel dikkat, raf performansı, özgünlük, netlik ve mesafe hiyerarşisini değerlendirir."],
+  ["02", "Teşhis Et", "Sistem ambalajın neden kazandığını veya kaybettiğini açıklar; kritik sorunları ikincil fırsatlardan ayırır."],
+  ["03", "Geliştir", "Teşhisi önceliklendirilmiş tasarım aksiyonlarına ve odaklı bir optimizasyon yönüne dönüştürün."],
+  ["04", "Doğrula", "Optimize edilen tasarımı orijinal ve rakiplerle yeniden test ederek performansın gerçekten gelişip gelişmediğini görün."],
 ];
 
 export default function HowItWorksPage() {
@@ -15,9 +15,9 @@ export default function HowItWorksPage() {
       <SiteHeader />
       <main className="pa-main">
         <section className="container pa-page-hero">
-          <div className="pa-kicker">How It Works</div>
-          <h1>Measure. Diagnose. Improve. Verify.</h1>
-          <p>A closed-loop workflow that brings research discipline into the speed of design.</p>
+          <div className="pa-kicker">Nasıl Çalışır</div>
+          <h1>Ölç. Teşhis Et. Geliştir. Doğrula.</h1>
+          <p>Araştırma disiplinini tasarım hızına taşıyan kapalı döngü bir çalışma sistemi.</p>
         </section>
 
         <section className="container pa-process-list">
@@ -31,15 +31,15 @@ export default function HowItWorksPage() {
         </section>
 
         <section className="container pa-proof-band">
-          <div><span>Original</span><strong>67</strong></div>
+          <div><span>Orijinal</span><strong>67</strong></div>
           <i>→</i>
-          <div className="active"><span>Optimized</span><strong>81</strong></div>
-          <p>Before / after validation turns design improvement into something you can verify, not just debate.</p>
+          <div className="active"><span>Optimize</span><strong>81</strong></div>
+          <p>Önce / sonra doğrulaması, tasarım gelişimini yalnızca tartışılan değil, ölçülebilen bir sonuca dönüştürür.</p>
         </section>
 
         <section className="container pa-wide-cta">
-          <div><span>Start with three images</span><h2>Your pack. Two competitors. One clear decision.</h2></div>
-          <Link href="/analyze" className="pa-button">Start Analysis</Link>
+          <div><span>Üç görselle başlayın</span><h2>Ambalajınız. İki rakip. Tek ve net bir karar.</h2></div>
+          <Link href="/analyze" className="pa-button">Analizi Başlat</Link>
         </section>
       </main>
       <SiteFooter />
