@@ -3,14 +3,14 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const capabilities = [
-  ["01", "Visual Attention Analysis", "See what gets noticed first and where attention gets lost inside the pack."],
-  ["02", "Competitive Shelf Test", "Evaluate your pack against real competitors instead of judging it in isolation."],
-  ["03", "Distinctiveness Analysis", "Measure how clearly your visual system separates from category conventions and competitors."],
-  ["04", "Product & Benefit Clarity", "Check whether shoppers can quickly understand what the product is and why it matters."],
-  ["05", "5m / 3m / 1m Visibility", "Test brand block, logo recognition and purchase message at different shopper distances."],
-  ["06", "AI Diagnosis", "Turn scores and attention signals into clear design problems, reasons and priorities."],
-  ["07", "AI Optimization", "Generate a focused optimization direction instead of a generic list of suggestions."],
-  ["08", "Re-Test", "Compare original versus optimized design and verify whether the change actually helped."],
+  ["01", "Görsel Dikkat Analizi", "İlk bakışta neyin fark edildiğini ve dikkatin ambalaj üzerinde nerede kaybolduğunu görün."],
+  ["02", "Rakipli Raf Testi", "Ambalajınızı tek başına değil, gerçek rakipleriyle birlikte değerlendirin."],
+  ["03", "Özgünlük Analizi", "Görsel sisteminizin kategori kodlarından ve rakiplerden ne kadar ayrıştığını ölçün."],
+  ["04", "Ürün ve Fayda Netliği", "Tüketicinin ürünün ne olduğunu ve neden önemli olduğunu ne kadar hızlı anlayabildiğini kontrol edin."],
+  ["05", "5 m / 3 m / 1 m Görünürlük", "Marka bloğu, logo tanınırlığı ve satın alma mesajını farklı tüketici mesafelerinde test edin."],
+  ["06", "Yapay Zekâ Teşhisi", "Skorları ve dikkat sinyallerini net tasarım sorunlarına, nedenlere ve önceliklere dönüştürün."],
+  ["07", "Yapay Zekâ Optimizasyonu", "Genel öneriler yerine odaklı ve uygulanabilir bir tasarım geliştirme yönü oluşturun."],
+  ["08", "Yeniden Test", "Orijinal ve optimize edilmiş tasarımı karşılaştırın; değişikliğin gerçekten işe yarayıp yaramadığını doğrulayın."],
 ];
 
 export default function ProductPage() {
@@ -19,10 +19,10 @@ export default function ProductPage() {
       <SiteHeader />
       <main className="pa-main">
         <section className="container pa-page-hero">
-          <div className="pa-kicker">Product</div>
-          <h1>Everything you need to improve packaging performance.</h1>
-          <p>Pack Analytic combines attention data, packaging-specific methodology and AI diagnosis in one workflow built for design teams.</p>
-          <Link href="/analyze" className="pa-button">Analyze Your Pack</Link>
+          <div className="pa-kicker">Ürün</div>
+          <h1>Ambalaj performansını geliştirmek için ihtiyacınız olan her şey.</h1>
+          <p>Pack Analytic; dikkat verisini, ambalaja özel metodolojiyi ve yapay zekâ teşhisini tasarım ekipleri için tek bir çalışma akışında birleştirir.</p>
+          <Link href="/analyze" className="pa-button">Ambalajını Analiz Et</Link>
         </section>
 
         <section className="container pa-capability-grid">
@@ -34,8 +34,8 @@ export default function ProductPage() {
         </section>
 
         <section className="container pa-wide-cta">
-          <div><span>From data to design action</span><h2>Not just a heatmap. A decision system.</h2></div>
-          <Link href="/how-it-works" className="pa-button pa-button-ghost">See how it works</Link>
+          <div><span>Veriden tasarım kararına</span><h2>Sadece bir ısı haritası değil. Bir karar sistemi.</h2></div>
+          <Link href="/how-it-works" className="pa-button pa-button-ghost">Nasıl çalıştığını gör</Link>
         </section>
       </main>
       <SiteFooter />
