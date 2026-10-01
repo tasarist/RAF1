@@ -2,261 +2,246 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
-const pillars = [
-  ["01", "Daha Güçlü Rekabet Et", "Ambalajınızın tüketicinin rafta gerçekten gördüğü rakiplerin yanında nasıl performans gösterdiğini görün."],
-  ["02", "Riski Azalt", "Baskı, üretim ve lansman öncesinde zayıf noktaları erkenden tespit edin."],
-  ["03", "Daha Hızlı Optimize Et", "Uzun araştırma süreçlerini beklemeden veriyi net tasarım aksiyonlarına dönüştürün."],
-];
-
-const methodology = [
-  ["Özgünlük", "82"],
-  ["Tutarlılık", "76"],
-  ["Ürün Netliği", "71"],
-  ["Dikkat", "84"],
-  ["Mesafe", "68"],
+const scores = [
+  ["Özgünlük", 82],
+  ["Ürün Netliği", 71],
+  ["Dikkat", 84],
+  ["Mesafe", 68],
 ];
 
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="pa-main pa2-main">
-        <section className="container pa2-hero">
-          <div className="pa2-copy">
-            <div className="pa2-kicker"><i /> Ambalaj Performans Zekâsı</div>
-            <h1>Ambalajınızı rafa çıkmadan önce <span>daha güçlü hale getirin.</span></h1>
+      <main className="pa-main pa2-main zentic-home">
+        <section className="zentic-hero">
+          <div className="container zentic-hero-inner">
+            <div className="zentic-badge"><i /> Ambalaj Performans Zekâsı <span>Yeni nesil raf analizi</span></div>
+            <h1>Ambalajınızı <span>rafta kazanan</span> bir tasarıma dönüştürün.</h1>
             <p>
-              Ambalajınızı rakipleriyle test edin, neden kazandığını veya kaybettiğini görün
-              ve lansmandan önce neyi değiştirmeniz gerektiğini bilin.
+              Pack Analytic; ambalajınızı rakipleriyle test eder, neden kazandığını veya
+              kaybettiğini açıklar ve rafa çıkmadan önce neyi değiştirmeniz gerektiğini gösterir.
             </p>
-            <div className="pa2-actions">
-              <Link href="/analyze" className="pa2-primary">Ambalajını Analiz Et <b>↗</b></Link>
-              <Link href="/how-it-works" className="pa2-secondary">Nasıl çalıştığını gör</Link>
+            <div className="zentic-hero-actions">
+              <Link href="/analyze" className="zentic-primary">Ambalajını Analiz Et <b>↗</b></Link>
+              <a href="#nasil-calisir" className="zentic-secondary">Nasıl çalışır <span>↓</span></a>
             </div>
-            <div className="pa2-meta">
-              <span>Hızlı test</span><span>Rakip benchmark</span><span>Aksiyona dönük teşhis</span>
+            <div className="zentic-proof-row">
+              <span><i>✓</i> Hızlı test</span>
+              <span><i>✓</i> Rakip benchmark</span>
+              <span><i>✓</i> Yapay zekâ teşhisi</span>
+              <span><i>✓</i> 5SE™ metodolojisi</span>
             </div>
+
+            <div className="zentic-orbit orbit-a" />
+            <div className="zentic-orbit orbit-b" />
+            <div className="zentic-glow glow-a" />
+            <div className="zentic-glow glow-b" />
           </div>
 
-          <div className="pa2-console">
-            <div className="pa2-console-head">
-              <div>
-                <span>PROJE</span>
-                <strong>Portakal Suyu / Konsept 04</strong>
-              </div>
-              <div className="pa2-live"><i /> ANALİZ HAZIR</div>
-            </div>
-
-            <div className="pa2-console-grid">
-              <div className="pa2-score-panel">
-                <span>PACK ANALYTIC SKORU</span>
-                <div className="pa2-score-ring">
-                  <svg viewBox="0 0 140 140" aria-hidden="true">
-                    <circle cx="70" cy="70" r="57" />
-                    <circle className="progress" cx="70" cy="70" r="57" />
-                  </svg>
-                  <strong>78</strong>
-                  <small>/100</small>
+          <div className="container zentic-dashboard-wrap">
+            <div className="zentic-dashboard">
+              <div className="zentic-dash-top">
+                <div className="zentic-window-dots"><i /><i /><i /></div>
+                <div className="zentic-dash-title">
+                  <span>Pack Analytic</span>
+                  <small>Portakal Suyu / Konsept 04</small>
                 </div>
-                <p>Güçlü raf potansiyeli. Çözülmesi gereken tek bir kritik iletişim sorunu var.</p>
+                <div className="zentic-dash-status"><i /> Analiz hazır</div>
               </div>
 
-              <div className="pa2-shelf-panel">
-                <div className="pa2-panel-label"><span>RAKİPLİ RAF TESTİ</span><b>Eşit paya göre +%26</b></div>
-                <div className="pa2-shelf">
-                  <div className="pa2-mini-pack rival"><span>RAKİP A</span><b>31%</b></div>
-                  <div className="pa2-mini-pack hero-pack">
-                    <span>SİZİN AMBALAJINIZ</span><b>42%</b>
-                    <i className="heat heat-a" /><i className="heat heat-b" />
+              <div className="zentic-dash-body">
+                <aside className="zentic-sidebar">
+                  <div className="zentic-side-logo">PA</div>
+                  <nav>
+                    <span className="active">Genel Bakış</span>
+                    <span>Raf Testi</span>
+                    <span>5SE™ Skorları</span>
+                    <span>Teşhis</span>
+                    <span>Öneriler</span>
+                  </nav>
+                  <div className="zentic-side-foot">AI Engine · Online</div>
+                </aside>
+
+                <section className="zentic-workspace">
+                  <div className="zentic-workspace-head">
+                    <div><span>GENEL 5SE SKORU</span><strong>78<small>/100</small></strong></div>
+                    <div className="zentic-growth">+12 puan potansiyel</div>
                   </div>
-                  <div className="pa2-mini-pack rival two"><span>RAKİP B</span><b>27%</b></div>
-                </div>
+
+                  <div className="zentic-main-grid">
+                    <article className="zentic-card zentic-shelf-card">
+                      <div className="zentic-card-head"><span>RAKİPLİ RAF TESTİ</span><b>Eşit paya göre +%26</b></div>
+                      <div className="zentic-shelf-stage">
+                        <div className="zentic-pack rival"><small>RAKİP A</small><strong>31%</strong></div>
+                        <div className="zentic-pack main">
+                          <small>SİZİN AMBALAJINIZ</small><strong>42%</strong>
+                          <i className="heat heat-one" /><i className="heat heat-two" />
+                        </div>
+                        <div className="zentic-pack rival alt"><small>RAKİP B</small><strong>27%</strong></div>
+                      </div>
+                    </article>
+
+                    <article className="zentic-card zentic-score-card">
+                      <div className="zentic-card-head"><span>PERFORMANS</span><b>Canlı sonuç</b></div>
+                      <div className="zentic-score-ring">
+                        <svg viewBox="0 0 140 140">
+                          <circle cx="70" cy="70" r="57" />
+                          <circle className="progress" cx="70" cy="70" r="57" />
+                        </svg>
+                        <strong>78</strong>
+                        <small>/100</small>
+                      </div>
+                      <p>Güçlü raf potansiyeli. Bir kritik iletişim sorunu çözülmeli.</p>
+                    </article>
+                  </div>
+
+                  <div className="zentic-score-row">
+                    {scores.map(([label, value]) => (
+                      <div key={String(label)}>
+                        <span>{label}</span>
+                        <strong>{value}</strong>
+                        <i><b style={{ width: value + "%" }} /></i>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="zentic-insight">
+                    <div><span>ÖNCELİKLİ TEŞHİS</span><strong>Ana fayda 1 m iletişiminde görünürlüğünü kaybediyor.</strong></div>
+                    <p>Alt iletişim alanını sadeleştirin ve ana claim hiyerarşisini güçlendirin.</p>
+                    <b>Önerileri gör →</b>
+                  </div>
+                </section>
               </div>
-            </div>
-
-            <div className="pa2-metric-row">
-              {methodology.map(([label, value]) => (
-                <div key={label}>
-                  <span>{label}</span>
-                  <strong>{value}</strong>
-                  <i><b style={{ width: value + "%" }} /></i>
-                </div>
-              ))}
-            </div>
-
-            <div className="pa2-alert">
-              <span>01 / ÖNCELİK</span>
-              <p>Ana fayda yakın mesafede görünürlüğünü kaybediyor. Alt iletişim alanını sadeleştirin ve claim hiyerarşisini güçlendirin.</p>
-              <b>Teşhisi gör →</b>
             </div>
           </div>
         </section>
 
-        <section className="pa2-system-line">
+        <section className="zentic-logo-strip">
           <div className="container">
-            <span>Görsel Dikkat</span><i>×</i><span>Raf Bağlamı</span><i>×</i><span>5SE™ Metodolojisi</span><i>×</i><strong>Yapay Zekâ Teşhisi</strong>
+            <span>Görsel Dikkat</span><i>•</i>
+            <span>Rakipli Raf Testi</span><i>•</i>
+            <span>5SE™ Metodolojisi</span><i>•</i>
+            <span>Yapay Zekâ Teşhisi</span><i>•</i>
+            <span>Tasarım Optimizasyonu</span>
           </div>
         </section>
 
-        <section className="container pa2-output-section" id="ornek-rapor">
-          <div className="pa2-section-head">
-            <div>
-              <div className="pa2-kicker"><i /> Bir analiz sonunda</div>
-              <h2>Skor değil, karar aldıran bir çıktı alın.</h2>
-            </div>
-            <p>Pack Analytic sonucu yalnızca “iyi / kötü” demez. Nerede kaybettiğinizi, nedenini ve neyi değiştirmeniz gerektiğini tek akışta gösterir.</p>
+        <section className="zentic-section container">
+          <div className="zentic-section-heading">
+            <span className="zentic-eyebrow">Neden Pack Analytic?</span>
+            <h2>Ambalaj kararlarını sezgiden çıkarıp <em>kanıta</em> yaklaştırır.</h2>
+            <p>Markaların en kritik tasarım kararlarını daha hızlı, daha karşılaştırılabilir ve daha aksiyona dönük hale getirir.</p>
           </div>
-
-          <div className="pa2-output-grid">
-            <article className="pa2-output-card pa2-output-score">
-              <div className="pa2-output-card-top"><span>01</span><b>5SE™ SCORECARD</b></div>
-              <div className="pa2-output-big-number">78<small>/100</small></div>
-              <p>Özgünlük, ürün netliği, dikkat, mesafe ve tutarlılık aynı sistem içinde okunur.</p>
-            </article>
-
-            <article className="pa2-output-card pa2-output-shelf">
-              <div className="pa2-output-card-top"><span>02</span><b>RAF KIYASI</b></div>
-              <div className="pa2-output-bars">
-                <div><span>Sizin ambalajınız</span><i><b style={{ width: "84%" }} /></i><strong>42%</strong></div>
-                <div><span>Rakip A</span><i><b style={{ width: "62%" }} /></i><strong>31%</strong></div>
-                <div><span>Rakip B</span><i><b style={{ width: "54%" }} /></i><strong>27%</strong></div>
-              </div>
-              <p>Rakipler arasında nerede durduğunuzu tek bakışta görün.</p>
-            </article>
-
-            <article className="pa2-output-card pa2-output-priority">
-              <div className="pa2-output-card-top"><span>03</span><b>ÖNCELİKLİ TEŞHİS</b></div>
-              <div className="pa2-priority-list">
-                <div className="critical"><i /> <span>Ana fayda 1 m iletişiminde zayıf</span></div>
-                <div className="important"><i /> <span>Logo çevresinde görsel rekabet yüksek</span></div>
-                <div className="opportunity"><i /> <span>Distinctive asset daha baskın kullanılabilir</span></div>
-              </div>
-              <p>Kritik sorun, önemli konu ve fırsatlar birbirinden ayrılır.</p>
-            </article>
-
-            <article className="pa2-output-card pa2-output-action">
-              <div className="pa2-output-card-top"><span>04</span><b>TASARIM AKSİYONU</b></div>
-              <ol>
-                <li>Ana claim'i sadeleştir</li>
-                <li>Logo çevresini temizle</li>
-                <li>Rakiplerden ayrışan grafik varlığı güçlendir</li>
-              </ol>
-              <p>Analiz doğrudan tasarım kararına dönüşür.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="container pa2-problem">
-          <div className="pa2-index">01</div>
-          <div className="pa2-problem-copy">
-            <div className="pa2-kicker"><i /> Problem</div>
-            <h2>Ambalaj, yalnızca sezgiyle onaylanamayacak kadar önemli.</h2>
-          </div>
-          <div className="pa2-problem-body">
-            <p>Markalar rakiplerinden daha güçlü ambalajlar istiyor; ancak geleneksel araştırmalar her tasarım iterasyonu için çoğu zaman fazla yavaş ve maliyetli.</p>
-            <p>Hızlı yapay zekâ araçları var, fakat çoğu ambalajın rafta cevaplaması gereken özel sorular için geliştirilmiş değil.</p>
-            <strong>Pack Analytic, tasarım ile araştırma arasındaki boşluğu doldurur.</strong>
-          </div>
-        </section>
-
-        <section className="container pa2-pillar-section">
-          <div className="pa2-section-head">
-            <div>
-              <div className="pa2-kicker"><i /> İş değeri</div>
-              <h2>Daha fazla güven. Daha az tahmin.</h2>
-            </div>
-            <p>Tasarım sürecini yavaşlatmadan daha güçlü ambalaj kararları almak isteyen ekipler için geliştirildi.</p>
-          </div>
-
-          <div className="pa2-pillars">
-            {pillars.map(([n, title, body]) => (
+          <div className="zentic-feature-grid">
+            {[
+              ["01","Rakiplerin Önüne Geç","Ambalajınızı tek başına değil, tüketicinin gördüğü gerçek rakip ortamında değerlendirin."],
+              ["02","Rafa Çıkmadan Riski Gör","Baskı ve lansmandan önce görünürlük, netlik ve ayrışma sorunlarını yakalayın."],
+              ["03","Daha Hızlı Optimize Et","Araştırma verisini tasarım ekibinin doğrudan uygulayabileceği aksiyonlara dönüştürün."],
+            ].map(([n,title,body]) => (
               <article key={title}>
-                <div className="pa2-card-top"><span>{n}</span><i>↗</i></div>
+                <span>{n}</span>
+                <div className="zentic-feature-icon">✦</div>
                 <h3>{title}</h3>
                 <p>{body}</p>
+                <Link href="/product">Daha fazla bilgi ↗</Link>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="pa2-process-band">
+        <section className="zentic-section zentic-process-section" id="nasil-calisir">
           <div className="container">
-            <div className="pa2-section-head light">
-              <div>
-                <div className="pa2-kicker"><i /> Kapalı döngü optimizasyon</div>
-                <h2>Ölç. Teşhis Et. Geliştir. Doğrula.</h2>
-              </div>
-              <Link href="/how-it-works" className="pa2-inline-link">Akışı incele ↗</Link>
+            <div className="zentic-section-heading centered">
+              <span className="zentic-eyebrow">Nasıl çalışır?</span>
+              <h2>Dört adımda <em>ölçülebilir</em> tasarım kararı.</h2>
+              <p>Pack Analytic, araştırma ve optimizasyonu tek bir kapalı döngüde birleştirir.</p>
             </div>
-            <div className="pa2-process-track">
+
+            <div className="zentic-process-grid">
               {[
-                ["01","ÖLÇ","Ambalajınız + rakipler"],
-                ["02","TEŞHİS ET","Neden kazanıyor veya kaybediyor?"],
-                ["03","GELİŞTİR","Önceliklendirilmiş tasarım aksiyonu"],
-                ["04","DOĞRULA","Yeni yönü tekrar test et"],
-              ].map(([n,t,b]) => (
-                <article key={t}><span>{n}</span><h3>{t}</h3><p>{b}</p></article>
+                ["01","Ölç","Ana ambalajı ve rakipleri görsel dikkat, netlik ve raf performansı açısından analiz eder."],
+                ["02","Teşhis Et","Nerede kaybettiğinizi, nedenini ve hangi sorunun öncelikli olduğunu açıklar."],
+                ["03","Geliştir","Önceliklendirilmiş tasarım aksiyonları ve optimize edilmiş yön oluşturur."],
+                ["04","Doğrula","Yeni tasarımı tekrar test ederek değişimin gerçekten işe yarayıp yaramadığını gösterir."],
+              ].map(([n,title,body]) => (
+                <article key={title}>
+                  <div className="zentic-process-number">{n}</div>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="container pa2-method">
-          <div className="pa2-method-copy">
-            <div className="pa2-kicker"><i /> 5SE™ ile desteklenir</div>
-            <h2>Ambalajın yapması gereken beş işi tek çerçevede ölçer.</h2>
-            <p>Pack Analytic ambalajı tüketicinin deneyimlediği şekilde değerlendirir: rekabetçi bir ortamda dikkat çekmek, tanınmak, anlaşılmak ve tercihi desteklemek.</p>
-            <Link href="/methodology" className="pa2-inline-link">Metodolojiyi incele ↗</Link>
+        <section className="zentic-section container zentic-analysis-output">
+          <div className="zentic-section-heading">
+            <span className="zentic-eyebrow">Çıktı</span>
+            <h2>Sadece skor değil. <em>Ne yapmanız gerektiğini</em> gösterir.</h2>
           </div>
-          <div className="pa2-method-board">
-            {[
-              ["01","Özgünlük","Rakiplerden ayırt edilebilir ol"],
-              ["02","Tutarlılık","Markanın görsel varlıklarını koru"],
-              ["03","Ürün Netliği","Ne olduğunu hızlı anlat"],
-              ["04","Dikkat ve Raf Etkisi","İlk bakışı kazan"],
-              ["05","Tüketici Mesafesi","5 m → 3 m → 1 m çalış"],
-            ].map(([n,t,b]) => (
-              <div key={t}><span>{n}</span><strong>{t}</strong><p>{b}</p></div>
-            ))}
+
+          <div className="zentic-output-grid">
+            <article className="zentic-output-card large">
+              <div className="zentic-output-top"><span>5SE™ SCORECARD</span><b>78/100</b></div>
+              <div className="zentic-output-chart">
+                <i style={{height:"82%"}}/><i style={{height:"76%"}}/><i style={{height:"71%"}}/><i style={{height:"84%"}}/><i style={{height:"68%"}}/>
+              </div>
+              <div className="zentic-output-labels"><span>Özgünlük</span><span>Tutarlılık</span><span>Netlik</span><span>Dikkat</span><span>Mesafe</span></div>
+            </article>
+
+            <article className="zentic-output-card">
+              <div className="zentic-output-top"><span>TEŞHİS</span><b>3 konu</b></div>
+              <ul>
+                <li><i className="red"/>Ana fayda yeterince görünür değil</li>
+                <li><i className="yellow"/>Logo çevresinde görsel rekabet yüksek</li>
+                <li><i className="green"/>Distinctive asset güçlendirilebilir</li>
+              </ul>
+            </article>
+
+            <article className="zentic-output-card">
+              <div className="zentic-output-top"><span>AKSİYON</span><b>Öncelikli</b></div>
+              <ol>
+                <li>Ana claim'i sadeleştir</li>
+                <li>Logo çevresini temizle</li>
+                <li>Grafik varlığı güçlendir</li>
+              </ol>
+            </article>
           </div>
         </section>
 
-        <section className="container pa2-compare">
-          <div className="pa2-compare-visual">
-            <div className="pa2-ruler"><span>5 m</span><span>3 m</span><span>1 m</span></div>
-            <div className="pa2-pack-row">
-              <div className="pack-box muted"><small>RAKİP A</small><b>31%</b></div>
-              <div className="pack-box focus"><small>SİZİN AMBALAJINIZ</small><b>42%</b><em>+26%</em></div>
-              <div className="pack-box muted alt"><small>RAKİP B</small><b>27%</b></div>
+        <section className="zentic-section zentic-method-band">
+          <div className="container zentic-method-layout">
+            <div>
+              <span className="zentic-eyebrow">5SE™ Metodolojisi</span>
+              <h2>Ambalajın rafta yapması gereken beş işi ölçer.</h2>
+              <p>Özgünlükten ürün netliğine, dikkat performansından 5 m / 3 m / 1 m iletişimine kadar.</p>
+              <Link href="/methodology" className="zentic-text-link">Metodolojiyi incele →</Link>
+            </div>
+            <div className="zentic-method-list">
+              {[
+                ["01","Özgünlük","Rakiplerden ayırt edilebilir mi?"],
+                ["02","Tutarlılık","Marka varlıkları korunuyor mu?"],
+                ["03","Ürün Netliği","Ürün ve fayda hızlı anlaşılıyor mu?"],
+                ["04","Dikkat & Raf Etkisi","İlk bakışı kazanıyor mu?"],
+                ["05","Tüketici Mesafesi","5 m → 3 m → 1 m doğru çalışıyor mu?"],
+              ].map(([n,title,body]) => (
+                <div key={title}><span>{n}</span><strong>{title}</strong><p>{body}</p></div>
+              ))}
             </div>
           </div>
-          <div className="pa2-compare-copy">
-            <div className="pa2-kicker"><i /> Rakipli Raf Zekâsı</div>
-            <h2>Ambalaj ekranda değil, rafta rekabet eder.</h2>
-            <p>Rakiplerinin yanında, sınırlı dikkat süresi içinde ve farklı mesafelerde rekabet eder. Pack Analytic tasarımınızı tek başına bir artwork olarak değil, bu gerçek bağlam içinde değerlendirir.</p>
-          </div>
         </section>
 
-        <section className="container pa2-action">
-          <div>
-            <div className="pa2-kicker"><i /> İçgörüden aksiyona</div>
-            <h2>Skorda durmayın.</h2>
-            <p>Neyin yanlış olduğunu, neden önemli olduğunu ve neyi değiştirmeniz gerektiğini görün. Ardından yeni yönü tekrar test ederek gerçekten gelişip gelişmediğini doğrulayın.</p>
+        <section className="zentic-final-cta">
+          <div className="container">
+            <span>Rafa çıkmadan önce bilin.</span>
+            <h2>Ambalajınızın performansını tahmin etmeyin. <em>Test edin.</em></h2>
+            <p>Ambalajınızı rakipleriyle karşılaştırın, sorunları görün ve daha güçlü bir tasarıma ulaşın.</p>
+            <Link href="/analyze" className="zentic-primary">Ambalajını Analiz Et <b>↗</b></Link>
           </div>
-          <div className="pa2-before-after">
-            <article><span>ORİJİNAL</span><strong>67</strong><small>Performans skoru</small></article>
-            <i>→</i>
-            <article className="optimized"><span>OPTİMİZE</span><strong>81</strong><small>Yeniden test sonucu</small></article>
-          </div>
-        </section>
-
-        <section className="container pa2-final">
-          <span>TASARIM BELİRSİZLİĞİNDEN RAF GÜVENİNE</span>
-          <h2>Rafta neyin işe yarayacağını tahmin etmeyi bırakın.</h2>
-          <p>Test edin. Anlayın. Geliştirin.</p>
-          <Link href="/analyze" className="pa2-primary">Ambalajını Analiz Et <b>↗</b></Link>
         </section>
       </main>
+
       <div className="pa2-mobile-sticky">
         <div><span>Pack Analytic</span><small>Rafa çıkmadan önce test et</small></div>
         <Link href="/analyze">Analiz Et ↗</Link>
