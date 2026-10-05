@@ -1,108 +1,80 @@
 import { NextResponse } from "next/server";
-import { analyzeSinglePackWithFengGui } from "@/lib/fengGui";
-import { createFengGuiBackedAnalysis } from "@/lib/liveAnalysis";
-import { createMockAnalysis } from "@/lib/mockAnalysis";
-import { enhanceAnalysisWithOpenAI } from "@/lib/openaiAnalysis";
+import { runAnalysis } from "@/lib/pipeline";
+import { saveAnalysis } from "@/lib/store/analysisStore";
 import type { ProjectMeta } from "@/lib/types";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 const ALLOWED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
-const MAX_BYTES = 1.2 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 3.5 * 1024 * 1024;
+const MAX_FILE_BYTES = 4 * 1024 * 1024;
+const MAX_SKUS = 4;
 
-function getText(form: FormData, key: string) {
-  const value = form.get(key);
-  return typeof value === "string" ? value.trim() : "";
+function text(form: FormData, key: string) {
+  const v = form.get(key);
+  return typeof v === "string" ? v.trim() : "";
 }
 
-function getImage(form: FormData, key: string) {
-  const value = form.get(key);
-  return value instanceof File ? value : null;
+function file(form: FormData, key: string) {
+  const v = form.get(key);
+  return v instanceof File && v.size > 0 ? v : null;
 }
 
-function errorMessage(error: unknown) {
-  return error instanceof Error ? error.message : "Bilinmeyen hata oluştu.";
+function validate(f: File, label: string) {
+  if (!ALLOWED_TYPES.has(f.type)) return `${label}: desteklenmeyen dosya türü (${f.type || "bilinmiyor"}). PNG, JPG veya WEBP yükleyin.`;
+  if (f.size > MAX_FILE_BYTES) return `${label}: dosya 4 MB sınırını aşıyor.`;
+  return null;
 }
 
+/**
+ * POST /api/analyze — multipart form.
+ * Required: projectName, category, brandName, productName, competitor1BrandName, competitor2BrandName,
+ *           mainPack, competitor1, competitor2
+ * Optional: previousPack, sku[] (up to 4)
+ * Uploaded bytes never leave the request lifecycle except as private data URLs inside the result.
+ */
 export async function POST(request: Request) {
   try {
     const form = await request.formData();
     const project: ProjectMeta = {
-      category: getText(form, "category"),
-      brandName: getText(form, "brandName"),
-      productName: getText(form, "productName"),
-      competitor1BrandName: getText(form, "competitor1BrandName"),
-      competitor2BrandName: getText(form, "competitor2BrandName"),
+      projectName: text(form, "projectName"),
+      category: text(form, "category"),
+      brandName: text(form, "brandName"),
+      productName: text(form, "productName"),
+      competitor1BrandName: text(form, "competitor1BrandName") || "Rakip 1",
+      competitor2BrandName: text(form, "competitor2BrandName") || "Rakip 2",
     };
+    const missing = (["projectName", "category", "brandName", "productName"] as const).filter((k) => !project[k]);
+    if (missing.length) return NextResponse.json({ error: `Eksik alanlar: ${missing.join(", ")}` }, { status: 400 });
 
-    if (
-      !project.category ||
-      !project.productName ||
-      !project.brandName ||
-      !project.competitor1BrandName ||
-      !project.competitor2BrandName
-    ) {
-      return NextResponse.json(
-        { error: "Kategori, ürün adı ve üç marka adı zorunludur." },
-        { status: 400 },
-      );
+    const main = file(form, "mainPack");
+    const c1 = file(form, "competitor1");
+    const c2 = file(form, "competitor2");
+    if (!main || !c1 || !c2) return NextResponse.json({ error: "Ana ambalaj ve iki rakip görseli zorunludur." }, { status: 400 });
+
+    const previous = file(form, "previousPack");
+    const skus = form.getAll("sku").filter((v): v is File => v instanceof File && v.size > 0).slice(0, MAX_SKUS);
+
+    for (const [f, label] of [[main, "Ana ambalaj"], [c1, "Rakip 1"], [c2, "Rakip 2"], ...(previous ? [[previous, "Eski ambalaj"] as const] : []), ...skus.map((s, i) => [s, `SKU ${i + 1}`] as const)] as Array<readonly [File, string]>) {
+      const err = validate(f, label);
+      if (err) return NextResponse.json({ error: err }, { status: 400 });
     }
 
-    const files = [
-      getImage(form, "mainPack"),
-      getImage(form, "competitor1"),
-      getImage(form, "competitor2"),
-    ];
-
-    if (files.some((file) => !file)) {
-      return NextResponse.json({ error: "Ana ambalaj ve iki rakip görseli zorunludur." }, { status: 400 });
-    }
-
-    const validFiles = files as File[];
-    const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
-    if (totalSize > MAX_TOTAL_BYTES) {
-      return NextResponse.json(
-        { error: "Üç görselin toplamı 3.5 MB canlı MVP sınırını aşıyor." },
-        { status: 400 },
-      );
-    }
-
-    for (const file of validFiles) {
-      if (!ALLOWED_TYPES.has(file.type)) {
-        return NextResponse.json({ error: `Desteklenmeyen dosya türü: ${file.name}` }, { status: 400 });
-      }
-      if (file.size > MAX_BYTES) {
-        return NextResponse.json({ error: `${file.name} 1.2 MB canlı MVP sınırını aşıyor.` }, { status: 400 });
-      }
-    }
-
-    const fileNames = validFiles.map((file) => file.name);
-    const useMock = process.env.USE_MOCK_DATA !== "false";
-
-    if (useMock) {
-      const result = createMockAnalysis(project, fileNames);
-      return NextResponse.json({ project, result });
-    }
-
-    try {
-      const singlePackAttention = await analyzeSinglePackWithFengGui(validFiles[0]);
-      let result = createFengGuiBackedAnalysis(project, fileNames, singlePackAttention);
-      try {
-        result = await enhanceAnalysisWithOpenAI(project, fileNames, result);
-      } catch (error) {
-        console.error("OpenAI analysis enhancement failed", error);
-      }
-      return NextResponse.json({ project, result });
-    } catch (error) {
-      console.error("Feng-GUI analysis failed", error);
-      return NextResponse.json(
-        { error: `Feng-GUI bağlantısı çalışmadı: ${errorMessage(error)}` },
-        { status: 502 },
-      );
-    }
+    const toBuffer = async (f: File) => Buffer.from(await f.arrayBuffer());
+    const analysis = await runAnalysis(project, {
+      main: await toBuffer(main),
+      competitor1: await toBuffer(c1),
+      competitor2: await toBuffer(c2),
+      previous: previous ? await toBuffer(previous) : undefined,
+      otherSkus: await Promise.all(skus.map(toBuffer)),
+    });
+    saveAnalysis(analysis);
+    return NextResponse.json({ analysis });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Analiz sırasında beklenmeyen bir hata oluştu." }, { status: 500 });
+    console.error("[5SE] analyze failed", error);
+    const message = error instanceof Error ? error.message : "Analiz sırasında beklenmeyen bir hata oluştu.";
+    // 4xx so the preview proxy does not clamp the status.
+    return NextResponse.json({ error: message }, { status: 422 });
   }
 }

@@ -1,17 +1,22 @@
 {
-  "name": "5se-mvp-v0-1",
-  "version": "0.1.0",
+  "name": "5se-packaging-intelligence",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "samples": "node scripts/make-samples.mjs",
+    "build:preview": "bash scripts/build-static-preview.sh",
+    "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
     "next": "15.5.24",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

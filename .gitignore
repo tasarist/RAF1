@@ -5,3 +5,6 @@ out
 .env.local
 .DS_Store
 *.log
+.next-export
+out
+*.tsbuildinfo
