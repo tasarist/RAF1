@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import type { GoalId, StepId } from "@/lib/pa/engine";
 import type { Analysis, Project } from "@/lib/pa/types";
 
@@ -26,21 +26,40 @@ export interface Wiz {
   standalone: boolean;
 }
 
-export function UploadSlot({ label, hint, src, onFile, required, busy, aspect = 1 }: {
-  label: string; hint?: string; src?: string | null; onFile: (f: File) => void; required?: boolean; busy?: boolean; aspect?: number;
+export function UploadSlot({ label, hint, src, onFile, required, busy, aspect = 1, compact }: {
+  label: string; hint?: string; src?: string | null; onFile: (f: File) => void; required?: boolean; busy?: boolean | string; aspect?: number; compact?: boolean;
 }) {
   const id = useId();
+  const [over, setOver] = useState(false);
   return (
-    <label htmlFor={id} className={`wz-upload${src ? " has" : ""}`} style={{ aspectRatio: String(aspect) }}>
-      <input id={id} type="file" accept="image/png,image/jpeg,image/webp" className="wz-hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
+    <label
+      htmlFor={id}
+      className={`wz-upload${src ? " has" : ""}${over ? " over" : ""}${busy ? " busy" : ""}${compact ? " compact" : ""}`}
+      style={compact ? undefined : { aspectRatio: String(aspect) }}
+      onDragOver={(e) => { e.preventDefault(); setOver(true); }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => { e.preventDefault(); setOver(false); const f = e.dataTransfer.files?.[0]; if (f && f.type.startsWith("image/")) onFile(f); }}
+    >
+      <input id={id} type="file" accept="image/png,image/jpeg,image/webp" className="wz-hidden" disabled={!!busy} onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      {src ? <img src={src} alt="" /> : null}
+      {src && !compact ? <img src={src} alt="" /> : null}
+      {busy ? <span className="wz-upload-busy"><i className="wz-spin" />{typeof busy === "string" ? busy : "YZ okuyor…"}</span> : null}
       <span className="wz-upload-label">
         <b>{label}{required ? " *" : ""}</b>
         {hint ? <small>{hint}</small> : null}
-        <em>{busy ? "Okunuyor…" : src ? "Değiştir" : "Görsel seç"}</em>
+        <em>{src ? "Değiştir" : "Görsel seç ya da sürükle bırak"}</em>
       </span>
     </label>
+  );
+}
+
+// Adımın alt çubuğu: ana düğme + düğme neden kapalıysa kısa açıklama.
+export function StepFooter({ note, children }: { note?: string | null; children: React.ReactNode }) {
+  return (
+    <div className="wz-footer">
+      {note ? <span className="wz-footer-note">{note}</span> : <span />}
+      <div className="wz-footer-btns">{children}</div>
+    </div>
   );
 }
 

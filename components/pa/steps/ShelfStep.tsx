@@ -5,7 +5,7 @@ import { api, fileToCanvasDataUrl, imageUrl, SHELF_SIZE } from "@/lib/pa/client"
 import { isAttention, type Analysis, type ShelfRead } from "@/lib/pa/types";
 import { AoiEditor, fromEditorItem, toEditorItems, type EditorItem } from "../AoiEditor";
 import { AttentionView } from "../AttentionView";
-import { ErrorNote, logoText, norm, UploadSlot, type Wiz } from "../shared";
+import { ErrorNote, logoText, norm, StepFooter, UploadSlot, type Wiz } from "../shared";
 
 interface Card { data?: string; read?: ShelfRead; items: EditorItem[]; busy?: boolean }
 type Saved = { id: string; createdAt: string; project: { name: string; brand: string }; brands?: string[]; status: string };
@@ -123,16 +123,17 @@ export function ShelfStep({ w }: { w: Wiz }) {
     <section className="wz-step">
       <header className="wz-step-head">
         <h2>Raf Testi</h2>
-        <p>Standart 3 raf görseli (1536×1024&apos;e sığdırılır). Beklenen markalar: {hints.join(", ")}.</p>
+        <p>Aynı 3 markanın göründüğü 3 raf görseli yükleyin (yatay, 1536×1024&apos;e sığdırılır). YZ marka bloklarını bulur; adları ve alanları kontrol edin.</p>
+        <div className="wz-quick"><span>Beklenen markalar:</span>{hints.map((h) => <span key={h} className="wz-pill static">{h}</span>)}</div>
       </header>
 
       {shelf?.shelfShares && !redo ? (
         <>
           <ShelfResult shelf={shelf} brand={w.project.brand} />
-          <div className="wz-actions">
+          <StepFooter>
             <button type="button" className="wz-btn ghost" onClick={() => { setRedo(true); setMode("new"); setCards([{ items: [] }, { items: [] }, { items: [] }]); }}>Yeni raf testi yap</button>
             <button type="button" className="wz-btn" onClick={w.next}>{w.standalone ? "Raf sonucuna git" : "Devam: Analiz"}</button>
-          </div>
+          </StepFooter>
         </>
       ) : (
         <>
@@ -156,7 +157,10 @@ export function ShelfStep({ w }: { w: Wiz }) {
                   <div key={i} className="wz-panel">
                     <div className="wz-panel-head"><h3>Raf {i + 1}</h3>{c.read?.mock ? <span className="wz-badge sim">Örnek okuma</span> : null}</div>
                     {c.read && c.data ? (
-                      <AoiEditor src={c.data} items={c.items} onChange={(items) => setCard(i, { items })} textLabel="Marka" aspect={SHELF_ASPECT} suggestions={hints} />
+                      <>
+                        <AoiEditor src={c.data} items={c.items} onChange={(items) => setCard(i, { items })} textLabel="Marka" aspect={SHELF_ASPECT} suggestions={hints} />
+                        <div className="wz-subrow"><UploadSlot compact label={`Raf ${i + 1} görseli`} src={c.data} busy={c.busy} onFile={(f) => onFile(i, f)} /></div>
+                      </>
                     ) : (
                       <div className="wz-uploads one"><UploadSlot label={`Raf ${i + 1}`} required hint="İdeal 1536×1024" src={c.data} busy={c.busy} onFile={(f) => onFile(i, f)} aspect={SHELF_ASPECT} /></div>
                     )}
@@ -164,7 +168,9 @@ export function ShelfStep({ w }: { w: Wiz }) {
                 ))}
               </div>
               {issues.length ? <ul className="wz-issues">{issues.map((x) => <li key={x}>{x}</li>)}</ul> : null}
-              <div className="wz-actions"><button type="button" className="wz-btn" disabled={!ready} onClick={measure}>{busy ? "Ölçülüyor…" : "Alanları onayla ve ölç"}</button></div>
+              <StepFooter note={cards.some((c) => !c.read) ? `${cards.filter((c) => !c.read).length} raf görseli eksik.` : issues.length ? "Marka eşleşme sorunlarını düzeltin." : null}>
+                <button type="button" className="wz-btn" disabled={!ready} onClick={measure}>{busy ? "Ölçülüyor…" : "Alanları onayla ve ölç"}</button>
+              </StepFooter>
             </>
           )}
         </>

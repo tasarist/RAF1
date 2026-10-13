@@ -92,11 +92,14 @@ export default function AnalyzePage() {
         </div>
 
         <nav className="wz-stepper" aria-label="Adımlar">
-          {steps.map((s, i) => (
-            <button key={s} type="button" className={`${s === step ? "on" : ""}${reached.includes(s) ? " reached" : ""}`} disabled={!reached.includes(s)} onClick={() => go(s)}>
-              <i>{i + 1}</i><span>{engine.stepLabels[s]}</span>
-            </button>
-          ))}
+          {steps.map((s, i) => {
+            const done = reached.includes(s) && i < steps.indexOf(step);
+            return (
+              <button key={s} type="button" aria-current={s === step ? "step" : undefined} className={`${s === step ? "on" : ""}${reached.includes(s) ? " reached" : ""}${done ? " done" : ""}`} disabled={!reached.includes(s)} onClick={() => go(s)}>
+                <i>{done ? "✓" : i + 1}</i><span>{engine.stepLabels[s]}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {error ? <p className="wz-error">{error}</p> : null}

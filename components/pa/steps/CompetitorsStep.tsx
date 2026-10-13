@@ -5,7 +5,7 @@ import { api, fileToCanvasDataUrl, imageUrl, PACK_SIZE } from "@/lib/pa/client";
 import { isAttention, type Analysis, type BrandRead, type ConsistencyRead } from "@/lib/pa/types";
 import { AoiEditor, fromEditorItem, toEditorItems, type EditorItem } from "../AoiEditor";
 import { AttentionView, Bar, MetricGrid } from "../AttentionView";
-import { ErrorNote, UploadSlot, type Wiz } from "../shared";
+import { ErrorNote, logoText, StepFooter, UploadSlot, type Wiz } from "../shared";
 
 interface Card { data?: string; read?: BrandRead; items: EditorItem[]; varData?: string; cons?: ConsistencyRead; busy?: string }
 
@@ -105,7 +105,7 @@ export function CompetitorsStep({ w }: { w: Wiz }) {
     }
   }
 
-  const ready = cards.every((c) => c.read && c.items.length > 0) && !busy && !cards.some((c) => c.busy);
+  const ready = cards.every((c) => c.read && c.items.length > 0 && logoText(c.items)) && !busy && !cards.some((c) => c.busy);
   const comp = w.comp;
   const showResult = comp?.compScores && !redo;
 
@@ -119,10 +119,10 @@ export function CompetitorsStep({ w }: { w: Wiz }) {
       {showResult ? (
         <>
           <CompResult comp={comp} aoiTypes={w.engine.aoiTypes} />
-          <div className="wz-actions">
+          <StepFooter note="Rakip Testi kaydı ambalaj analizine bağlandı.">
             <button type="button" className="wz-btn ghost" onClick={() => { setRedo(true); setMode("new"); setCards([{ items: [] }, { items: [] }]); }}>Farklı rakiplerle yeniden yap</button>
-            {!w.standalone ? <button type="button" className="wz-btn" onClick={w.next}>Devam: Raf Testi</button> : <button type="button" className="wz-btn" onClick={w.next}>Rakip sonucuna git</button>}
-          </div>
+            <button type="button" className="wz-btn" onClick={w.next}>{w.standalone ? "Rakip sonucuna git" : "Devam: Raf Testi"}</button>
+          </StepFooter>
         </>
       ) : (
         <>
@@ -142,27 +142,28 @@ export function CompetitorsStep({ w }: { w: Wiz }) {
             </div>
           ) : (
             <>
-              <div className="wz-grid2">
+              <div className="wz-grid2 tight">
                 {cards.map((c, i) => (
                   <div key={i} className="wz-panel">
-                    <div className="wz-panel-head"><h3>Rakip {i ? "B" : "A"}</h3>{c.read ? <span className="wz-chip">DBA {c.read.score}</span> : null}{c.cons ? <span className="wz-chip">Varyant {c.cons.score}</span> : null}</div>
+                    <div className="wz-panel-head"><h3>Rakip {i ? "B" : "A"}{logoText(c.items) ? ` · ${logoText(c.items)}` : ""}</h3>{c.read ? <span className="wz-chip">DBA {c.read.score}</span> : null}{c.cons ? <span className="wz-chip">Varyant {c.cons.score}</span> : null}</div>
                     {!c.read ? (
-                      <div className="wz-uploads two">
-                        <UploadSlot label={`Rakip ${i ? "B" : "A"}`} required src={c.data} busy={c.busy === "main"} onFile={(f) => onFile(i, f)} />
-                      </div>
+                      <UploadSlot label={`Rakip ${i ? "B" : "A"}`} required hint="Ön yüz, düz çekim" src={c.data} busy={c.busy === "main"} onFile={(f) => onFile(i, f)} />
                     ) : (
                       <>
                         <AoiEditor src={c.data!} items={c.items} onChange={(items) => setCard(i, { items })} types={w.engine.aoiTypes} />
-                        <div className="wz-uploads two">
-                          <UploadSlot label="Görseli değiştir" src={null} busy={c.busy === "main"} onFile={(f) => onFile(i, f)} aspect={2.4} />
-                          <UploadSlot label="Varyant" hint="İsteğe bağlı" src={c.varData} busy={c.busy === "var"} onFile={(f) => onVariant(i, f)} aspect={2.4} />
+                        {!logoText(c.items) ? <p className="wz-warn">Logo/Marka alanının metnine rakibin marka adını yazın; Raf Testi bu adla eşleşir.</p> : null}
+                        <div className="wz-subrow">
+                          <UploadSlot compact label="Rakip görseli" src={c.data} busy={c.busy === "main"} onFile={(f) => onFile(i, f)} />
+                          <UploadSlot compact label="Varyant" hint={c.cons ? `Tutarlılık ${c.cons.score}` : "İsteğe bağlı"} src={c.varData} busy={c.busy === "var" && "Okunuyor…"} onFile={(f) => onVariant(i, f)} />
                         </div>
                       </>
                     )}
                   </div>
                 ))}
               </div>
-              <div className="wz-actions"><button type="button" className="wz-btn" disabled={!ready} onClick={measure}>{busy ? "Ölçülüyor…" : "Alanları onayla ve ölç"}</button></div>
+              <StepFooter note={ready ? "İki rakip de ölçülecek." : cards.some((c) => !c.read) ? "Rakip A ve Rakip B görsellerini yükleyin." : busy ? null : "Rakip markası adlarını kontrol edin."}>
+                <button type="button" className="wz-btn" disabled={!ready} onClick={measure}>{busy ? "Ölçülüyor…" : "Alanları onayla ve ölç"}</button>
+              </StepFooter>
             </>
           )}
         </>

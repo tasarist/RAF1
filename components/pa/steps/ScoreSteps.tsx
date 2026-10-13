@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { api, imageUrl } from "@/lib/pa/client";
 import { isAttention, type Analysis, type DimKey } from "@/lib/pa/types";
 import { AttentionView, Bar, MetricGrid, ShareTable } from "../AttentionView";
-import { ErrorNote, ScoreScale, Verdict, type Wiz } from "../shared";
+import { ErrorNote, ScoreScale, StepFooter, Verdict, type Wiz } from "../shared";
 import { ShelfResult } from "./ShelfStep";
 
-export const DIMS: Array<{ key: DimKey; no: string; label: string }> = [
-  { key: "dba", no: "01", label: "Güçlü ayırıcı marka varlıkları" },
-  { key: "consistency", no: "02", label: "Sürekli ve tutarlı ol" },
-  { key: "reflect", no: "03", label: "Ürünü doğru yansıt" },
-  { key: "exciting", no: "04", label: "İlgi çekici ol" },
-  { key: "consumer", no: "05", label: "Tüketici odaklı ol" },
+export const DIMS: Array<{ key: DimKey; no: string; label: string; how: string }> = [
+  { key: "dba", no: "01", label: "Güçlü ayırıcı marka varlıkları", how: "YZ'nin ambalajdaki marka kodlarını (logo, renk, şekil) okuyup verdiği DBA puanı." },
+  { key: "consistency", no: "02", label: "Sürekli ve tutarlı ol", how: "Varyant tutarlılığı ve eski tasarım sürekliliği puanlarının ortalaması." },
+  { key: "reflect", no: "03", label: "Ürünü doğru yansıt", how: "Logo, varyant ve claim alanlarının bakış payının hedeflere (%25 / %20 / %20) yakınlığı." },
+  { key: "exciting", no: "04", label: "İlgi çekici ol", how: "Raftaki dikkat payı; adil payın iki katı 100 puan sayılır." },
+  { key: "consumer", no: "05", label: "Tüketici odaklı ol", how: "Görsel dikkat modelinin ambalaj geneli için verdiği Genel skor." },
 ];
 
 // ── Adım 5 · Analiz ───────────────────────────────────────────────────────
@@ -39,7 +39,7 @@ export function AnalysisStep({ w }: { w: Wiz }) {
         {tasks.map((t, i) => <li key={t} className={i < done ? "done" : i === done ? "run" : ""}>{t}</li>)}
       </ol>
       <ErrorNote error={error} />
-      <div className="wz-actions"><button type="button" className="wz-btn" disabled={done < tasks.length} onClick={w.next}>5SE™ Sonuçlarını gör</button></div>
+      <StepFooter note={done < tasks.length && !error ? "Hesaplanıyor…" : null}><button type="button" className="wz-btn" disabled={done < tasks.length} onClick={w.next}>5SE™ Sonuçlarını gör</button></StepFooter>
     </section>
   );
 }
@@ -137,13 +137,21 @@ export function ResultsStep({ w }: { w: Wiz }) {
         ) : null}
       </div>
 
-      {!w.standalone ? <div className="wz-actions"><button type="button" className="wz-btn" onClick={w.next}>Devam: Teşhis</button></div> : null}
+      <StepFooter note="Sonraki adımda ölçümlere dayalı öneriler listelenir."><button type="button" className="wz-btn" onClick={w.next}>Devam: Teşhis</button></StepFooter>
     </section>
   );
 }
 
 function DimHead({ no, label, value }: { no: string; label: string; value: number | null }) {
-  return <div className="wz-dim-head"><span className="wz-no">{no}</span><h3>{label}</h3><b className="wz-dim-val">{value ?? "—"}</b></div>;
+  const how = DIMS.find((d) => d.no === no)?.how;
+  const cls = value == null ? "none" : value < 55 ? "risk" : value < 75 ? "mid" : "ok";
+  return (
+    <div className="wz-dim-head">
+      <span className="wz-no">{no}</span>
+      <div><h3>{label}</h3>{how ? <p className="wz-muted small">{how}</p> : null}</div>
+      <b className={`wz-dim-val ${cls}`}>{value ?? "—"}</b>
+    </div>
+  );
 }
 
 // ── Adım 7 · Teşhis ──────────────────────────────────────────────────────
@@ -179,7 +187,10 @@ export function DiagnosisStep({ w }: { w: Wiz }) {
         </div>
       ) : <p className="wz-muted">Tüm boyutlar hedefte; öneri yok.</p>}
       <ErrorNote error={error} />
-      <div className="wz-actions"><button type="button" className="wz-btn" onClick={save}>Devam: Tasarımı Optimize Et</button></div>
+      <StepFooter note={`${sel.length} öneri seçili`}>
+        {a.recs?.length ? <button type="button" className="wz-btn ghost" onClick={() => setSel(sel.length === a.recs!.length ? [] : a.recs!.map((r) => r.id))}>{sel.length === a.recs.length ? "Seçimi temizle" : "Tümünü seç"}</button> : null}
+        <button type="button" className="wz-btn" onClick={save}>Devam: Tasarımı Optimize Et</button>
+      </StepFooter>
     </section>
   );
 }
@@ -221,7 +232,7 @@ export function BeforeAfterStep({ w }: { w: Wiz }) {
         <div className="wz-panel"><h3>Önce</h3><AttentionView src={imageUrl(a.id, "ours")} att={ours} /></div>
         <div className="wz-panel"><h3>Sonra · v{a.optimized?.version}{a.optimized?.manual ? " (revize yükleme)" : ""}</h3><AttentionView src={imageUrl(a.id, "optimized", a.optimized?.createdAt)} att={opt} /></div>
       </div>
-      <div className="wz-actions"><a className="wz-btn" href="/analyses">Analizlerime dön</a></div>
+      <StepFooter note="Analiz tamamlandı ve hesabınızda kayıtlı."><a className="wz-btn ghost" href="/analyze">Yeni analiz</a><a className="wz-btn" href="/analyses">Analizlerime dön</a></StepFooter>
     </section>
   );
 }

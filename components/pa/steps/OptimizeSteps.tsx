@@ -5,7 +5,7 @@ import { api, fileToCanvasDataUrl, imageUrl, PACK_SIZE } from "@/lib/pa/client";
 import { isAttention, type Analysis } from "@/lib/pa/types";
 import { AoiEditor, fromEditorItem, toEditorItems, type EditorItem } from "../AoiEditor";
 import { AttentionView, MetricGrid, ShareTable } from "../AttentionView";
-import { ErrorNote, UploadSlot, type Wiz } from "../shared";
+import { ErrorNote, StepFooter, UploadSlot, type Wiz } from "../shared";
 
 const GUARD = "Edit only the 2D artwork/label of this packaging image. Keep the same package silhouette, proportions, closure, perspective and position; square canvas, clean neutral background. Keep the brand name and product type. Do not add people, hands or unrelated objects.";
 
@@ -71,7 +71,7 @@ export function OptimizeStep({ w }: { w: Wiz }) {
               <div className="wz-actions"><button type="button" className="wz-btn" disabled={busy || !prompt.trim()} onClick={generate}>{busy ? "Üretiliyor… (1 dakikaya kadar)" : "Tasarımı üret"}</button></div>
             </div>
           ) : (
-            <div className="wz-uploads one"><UploadSlot label="Revize tasarım" hint="Kendi tasarımcınızın versiyonu" src={null} busy={busy} onFile={upload} /></div>
+            <UploadSlot label="Revize tasarım" hint="Kendi tasarımcınızın hazırladığı versiyon" src={null} busy={busy && "Yükleniyor…"} onFile={upload} />
           )}
           <ErrorNote error={error} />
         </div>
@@ -83,7 +83,7 @@ export function OptimizeStep({ w }: { w: Wiz }) {
           </div>
         </div>
       </div>
-      <div className="wz-actions"><button type="button" className="wz-btn" disabled={!has || busy} onClick={w.next}>Devam: Yeniden Test</button></div>
+      <StepFooter note={has ? null : "Önce bir optimize tasarım üretin ya da yükleyin."}><button type="button" className="wz-btn" disabled={!has || busy} onClick={w.next}>Devam: Yeniden Test</button></StepFooter>
     </section>
   );
 }
@@ -126,7 +126,7 @@ export function RetestStep({ w }: { w: Wiz }) {
           <div className="wz-stack"><h3>Bakış Payı (%)</h3><ShareTable att={opt} types={w.engine.aoiTypes} /><MetricGrid att={opt} /></div>
         </div>
       ) : null}
-      <div className="wz-actions"><button type="button" className="wz-btn" disabled={!opt || !a.scores?.after} onClick={w.next}>Devam: Önce / Sonra</button></div>
+      <StepFooter note={opt ? null : "Alanları kontrol edip optimize tasarımı ölçün."}><button type="button" className="wz-btn" disabled={!opt || !a.scores?.after} onClick={w.next}>Devam: Önce / Sonra</button></StepFooter>
     </section>
   );
 }
