@@ -1,3 +1,19 @@
+# Pack Analytic — 5SE™ Analiz Demo (motor v4)
+
+`/analyze` sayfası "Ambalajını Analiz Et" iş akışının çalışan demosudur:
+Proje Kurulumu → Ambalajını Yükle → Rakip Testi → Raf Testi → Analiz → 5SE™ Sonuçları → Teşhis → Tasarımı Optimize Et → Yeniden Test → Önce / Sonra.
+Bağımsız Rakip Testi ve Raf Testi akışları da vardır. Kayıtlar `/analyses` sayfasında listelenir; yarıda kalan analiz kaldığı adımdan sürer.
+
+- **YZ görsel okuma** (Ana SKU, rakipler, raflar, tutarlılık): gerçek OpenAI API, `OPENAI_API_KEY` gerekir. Sonuçlar görsel hash'i ile önbelleğe alınır.
+- **Görsel dikkat modeli**: askıda. Görsel hash'i ve onaylı alanlardan kararlı, temsili bakış noktaları üretilir; ısı haritası ve bakış rotası bunlardan çizilir ("Askıda · temsili").
+- **Skorlar** yalnızca sunucuda, `lib/pa/scoring.ts` içinde, kaydın motor sürümüyle hesaplanır (`lib/pa/engine.ts`).
+- Giriş, kredi, PDF/PPTX dışa aktarım ve yönetici paneli bu demoda yoktur.
+- Kayıtlar JSON dosyası olarak `DATA_DIR` altında tutulur (yerelde `./data`, Vercel'de geçici `/tmp`).
+
+Demo varsayımları: bakış payı yakınlığı 0–100 aralığına sıkıştırılır; ambalajda olmayan alan türü hesaba girmez; Rakip Testi toplamı DBA, netlik ve öne çıkma ortalamasıdır; Önce/Sonra'da yalnızca dikkate dayalı 03 ve 05 yeniden ölçülür.
+
+---
+
 # 5SE™ Packaging Intelligence — MVP v0.1
 
 Bu paket doğrudan çalıştırılabilir/deploy edilebilir bir **Next.js prototipidir**.

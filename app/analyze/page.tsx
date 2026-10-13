@@ -1,202 +1,123 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { UploadCard } from "@/components/UploadCard";
-import { Results } from "@/components/Results";
-import type { AnalyzeApiResponse } from "@/lib/types";
+import { useCallback, useEffect, useState } from "react";
+import { SiteHeader } from "@/components/SiteHeader";
+import { CompResult, CompetitorsStep } from "@/components/pa/steps/CompetitorsStep";
+import { OptimizeStep, RetestStep } from "@/components/pa/steps/OptimizeSteps";
+import { PackStep } from "@/components/pa/steps/PackStep";
+import { AnalysisStep, BeforeAfterStep, DiagnosisStep, ResultsStep } from "@/components/pa/steps/ScoreSteps";
+import { SetupStep } from "@/components/pa/steps/SetupStep";
+import { ShelfResult, ShelfStep } from "@/components/pa/steps/ShelfStep";
+import { type EngineInfo, type Wiz } from "@/components/pa/shared";
+import { api } from "@/lib/pa/client";
+import type { StepId } from "@/lib/pa/engine";
+import type { Analysis, Project } from "@/lib/pa/types";
+import "./wizard.css";
 
-type FileKey = "mainPack" | "competitor1" | "competitor2";
-type BrandKey = "brandName" | "competitor1BrandName" | "competitor2BrandName";
-type AnalyzeErrorResponse = { error?: string };
-
-const MAX_FILE_BYTES = 1.2 * 1024 * 1024;
-const MAX_TOTAL_UPLOAD_BYTES = 3.5 * 1024 * 1024;
-
-function formatMb(bytes: number) {
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function validateUploadSize(files: File[]) {
-  const oversized = files.find((file) => file.size > MAX_FILE_BYTES);
-  if (oversized) {
-    return `${oversized.name} ${formatMb(MAX_FILE_BYTES)} canlı MVP sınırını aşıyor. Lütfen görseli küçültüp tekrar yükleyin.`;
-  }
-
-  const totalSize = files.reduce((sum, file) => sum + file.size, 0);
-  if (totalSize > MAX_TOTAL_UPLOAD_BYTES) {
-    return `Üç görselin toplamı ${formatMb(MAX_TOTAL_UPLOAD_BYTES)} sınırını aşıyor. Lütfen görselleri biraz sıkıştırın.`;
-  }
-
-  return null;
-}
-
-async function parseAnalyzeResponse(response: Response): Promise<AnalyzeApiResponse | AnalyzeErrorResponse> {
-  const contentType = response.headers.get("content-type") ?? "";
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  const text = await response.text();
-  if (response.status === 413 || text.includes("FUNCTION_PAYLOAD_TOO_LARGE")) {
-    return {
-      error: "Görseller canlı yükleme sınırını aşıyor. Lütfen her görseli yaklaşık 1.2 MB altına küçültün.",
-    };
-  }
-
-  return { error: text || "Analiz başlatılamadı." };
-}
+const EMPTY: Project = { name: "", brand: "", category: "", goal: "new", channel: "Zincir market" };
 
 export default function AnalyzePage() {
-  const [category, setCategory] = useState("");
-  const [productName, setProductName] = useState("");
-  const [brandNames, setBrandNames] = useState<Record<BrandKey, string>>({
-    brandName: "",
-    competitor1BrandName: "",
-    competitor2BrandName: "",
-  });
-  const [files, setFiles] = useState<Record<FileKey, File | null>>({
-    mainPack: null,
-    competitor1: null,
-    competitor2: null,
-  });
-  const [loading, setLoading] = useState(false);
+  const [engine, setEngine] = useState<EngineInfo | null>(null);
+  const [project, setProject] = useState<Project>(EMPTY);
+  const [pack, setPack] = useState<Analysis | null>(null);
+  const [comp, setComp] = useState<Analysis | null>(null);
+  const [shelf, setShelf] = useState<Analysis | null>(null);
+  const [step, setStep] = useState<StepId>("setup");
+  const [reached, setReached] = useState<StepId[]>(["setup"]);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<AnalyzeApiResponse | null>(null);
 
-  const updateFile = (key: FileKey, file: File | null) => {
-    setFiles((current) => ({ ...current, [key]: file }));
-  };
+  const steps = engine?.flows[project.goal]?.steps ?? [];
+  const main = pack ?? (project.goal === "competitors" ? comp : project.goal === "shelf" ? shelf : null);
 
-  const updateBrandName = (key: BrandKey, value: string) => {
-    setBrandNames((current) => ({ ...current, [key]: value }));
-  };
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setData(null);
-
-    if (!files.mainPack || !files.competitor1 || !files.competitor2) {
-      setError("Ana ambalaj ve iki rakip görselini yüklemelisiniz.");
-      return;
-    }
-
-    const selectedFiles = [files.mainPack, files.competitor1, files.competitor2] as File[];
-    const sizeError = validateUploadSize(selectedFiles);
-    if (sizeError) {
-      setError(sizeError);
-      return;
-    }
-
-    const form = new FormData();
-    form.append("category", category);
-    form.append("productName", productName);
-    form.append("brandName", brandNames.brandName);
-    form.append("competitor1BrandName", brandNames.competitor1BrandName);
-    form.append("competitor2BrandName", brandNames.competitor2BrandName);
-    form.append("mainPack", files.mainPack);
-    form.append("competitor1", files.competitor1);
-    form.append("competitor2", files.competitor2);
-
-    try {
-      setLoading(true);
-      const response = await fetch("/api/analyze", { method: "POST", body: form });
-      const json = await parseAnalyzeResponse(response);
-      if (!response.ok) {
-        const message = "error" in json ? json.error : null;
-        throw new Error(message || "Analiz başlatılamadı.");
+  // Açılış: motor konfigürasyonu + ?resume=<id> ile kaldığı adımdan devam.
+  useEffect(() => {
+    (async () => {
+      try {
+        setEngine(await api<EngineInfo>("/api/engine"));
+        const id = new URLSearchParams(window.location.search).get("resume");
+        if (!id) return;
+        const a = await api<Analysis>(`/api/analyses/${id}`);
+        setProject(a.project);
+        if (a.kind === "pack") {
+          setPack(a);
+          if (a.refs?.competitors) setComp(await api<Analysis>(`/api/analyses/${a.refs.competitors}`).catch(() => null));
+          if (a.refs?.shelf) setShelf(await api<Analysis>(`/api/analyses/${a.refs.shelf}`).catch(() => null));
+        } else if (a.kind === "competitors") setComp(a);
+        else setShelf(a);
+        if (a.progress) { setStep(a.progress.step); setReached(a.progress.reached); }
+      } catch (e) {
+        setError((e as Error).message);
       }
-      setData(json as AnalyzeApiResponse);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Beklenmeyen hata oluştu.");
-    } finally {
-      setLoading(false);
-    }
+    })();
+  }, []);
+
+  // İlerleme kayda yazılır (yarıda kalsa bile devam edilebilir).
+  useEffect(() => {
+    if (!main) return;
+    if (main.progress?.step === step && main.progress.reached.length === reached.length) return;
+    api(`/api/analyses/${main.id}`, { method: "PATCH", body: { progress: { step, reached, updatedAt: new Date().toISOString() } } }).catch(() => undefined);
+  }, [main?.id, step, reached]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const go = useCallback((s: StepId) => {
+    setStep(s);
+    setReached((r) => (r.includes(s) ? r : [...r, s]));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const next = useCallback(() => {
+    const i = steps.indexOf(step);
+    if (i >= 0 && i < steps.length - 1) go(steps[i + 1]);
+  }, [steps, step, go]);
+
+  if (!engine) {
+    return <><SiteHeader /><main className="wz container"><p className="wz-muted">{error ?? "Yükleniyor…"}</p></main></>;
   }
 
+  const w: Wiz = { engine, project, setProject, pack, setPack, comp, setComp, shelf, setShelf, next, standalone: project.goal === "competitors" || project.goal === "shelf" };
+
   return (
-    <main>
-      <div className="container">
-        <nav className="nav">
-          <Link href="/" className="brand">Pack Analytic</Link>
-          <div className="navTag">Ambalaj Performans Zekâsı · MVP</div>
-        </nav>
-
-        <header className="pageTitle">
-          <div className="eyebrow">Yeni analiz</div>
-          <h1>Üç ambalajı yükleyin.</h1>
-          <p>
-            Ana tasarımınızı ve iki rakibi ekleyin. Marka adlarını elle girin;
-            sonuç ekranında tüm raf karşılaştırmaları bu isimlerle gösterilir.
-            Canlı MVP için görselleri 1024×1024 piksel olarak hazırlayın ve her dosyayı 1.2 MB altında tutun.
-          </p>
-        </header>
-
-        <div className="analysis-steps" aria-label="Analiz adımları">
-          <div className="analysis-step"><span>01</span><strong>Proje bilgisi</strong><p>Kategori, ürün ve marka adlarını girin.</p></div>
-          <div className="analysis-step"><span>02</span><strong>3 ambalaj yükleyin</strong><p>Ana tasarım + iki gerçek rakip görseli.</p></div>
-          <div className="analysis-step"><span>03</span><strong>Sonucu karşılaştırın</strong><p>Skor, teşhis, raf kıyası ve iyileştirme önerileri.</p></div>
+    <>
+      <SiteHeader />
+      <main className="wz container">
+        <div className="wz-top">
+          <div>
+            <span className="wz-eyebrow">Ambalajını Analiz Et · motor v{engine.version}</span>
+            <h1>{project.name || "Yeni analiz"}{project.brand ? <small> · {project.brand}</small> : null}</h1>
+          </div>
+          <div className="wz-top-links">
+            <span className="wz-badge sim" title="Görsel dikkat modeli askıda: değerler görselden türetilen temsili değerlerdir.">Dikkat modeli askıda · temsili</span>
+            <Link href="/analyses" className="wz-btn ghost small">Analizlerim</Link>
+          </div>
         </div>
 
-        <section className="analysis-form-shell">
-          <div className="analysis-form-title">
-            <h2>Analiz girdileri</h2>
-            <span>Zorunlu alanlar · yaklaşık 2 dakika</span>
-          </div>
-
-          <form onSubmit={submit}>
-          <div className="formMeta projectMeta">
-            <Field label="Kategori" value={category} setValue={setCategory} placeholder="Örn. Meyve suyu" />
-            <Field label="Ürün adı" value={productName} setValue={setProductName} placeholder="Örn. Portakal" />
-          </div>
-
-          <div className="uploadGrid">
-            <UploadCard title="ANA TASARIM" subtitle="Test edilecek ambalaj" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.mainPack} onChange={(f) => updateFile("mainPack", f)} />
-            <UploadCard title="RAKİP 1" subtitle="Karşılaştırma ambalajı" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.competitor1} onChange={(f) => updateFile("competitor1", f)} />
-            <UploadCard title="RAKİP 2" subtitle="Karşılaştırma ambalajı" helper="1024×1024 px önerilir · Maks. 1.2 MB" file={files.competitor2} onChange={(f) => updateFile("competitor2", f)} />
-          </div>
-
-          <div className="formSectionLabel">Marka adları</div>
-          <div className="brandFieldGrid">
-            <Field label="Ana tasarım markası" value={brandNames.brandName} setValue={(value) => updateBrandName("brandName", value)} placeholder="Örn. Juss" />
-            <Field label="Rakip 1 markası" value={brandNames.competitor1BrandName} setValue={(value) => updateBrandName("competitor1BrandName", value)} placeholder="Örn. Dimes" />
-            <Field label="Rakip 2 markası" value={brandNames.competitor2BrandName} setValue={(value) => updateBrandName("competitor2BrandName", value)} placeholder="Örn. Cappy" />
-          </div>
-
-          {error ? <div className="alert error">{error}</div> : null}
-
-          <div className="formFooter">
-            <button className="button primary" type="submit" disabled={loading}>
-              {loading ? "Analiz ediliyor..." : "Analiz Et"}
+        <nav className="wz-stepper" aria-label="Adımlar">
+          {steps.map((s, i) => (
+            <button key={s} type="button" className={`${s === step ? "on" : ""}${reached.includes(s) ? " reached" : ""}`} disabled={!reached.includes(s)} onClick={() => go(s)}>
+              <i>{i + 1}</i><span>{engine.stepLabels[s]}</span>
             </button>
-            <div className="statusNote">Görseller kalıcı olarak saklanmaz. PNG, JPG veya WEBP · dosya başına maks. 1.2 MB.</div>
-          </div>
-          </form>
-        </section>
+          ))}
+        </nav>
 
-        {data ? <Results data={data} mainPackFile={files.mainPack} /> : null}
-        <footer className="footer">Pack Analytic · Prototip</footer>
-      </div>
-    </main>
-  );
-}
+        {error ? <p className="wz-error">{error}</p> : null}
 
-function Field({
-  label,
-  value,
-  setValue,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  setValue: (v: string) => void;
-  placeholder: string;
-}) {
-  return (
-    <label className="field">
-      <span>{label}</span>
-      <input required value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
-    </label>
+        {step === "setup" && <SetupStep w={w} locked={!!main} />}
+        {step === "pack" && <PackStep w={w} />}
+        {step === "competitors" && <CompetitorsStep w={w} />}
+        {step === "shelf" && <ShelfStep w={w} />}
+        {step === "analysis" && <AnalysisStep w={w} />}
+        {step === "results" && <ResultsStep w={w} />}
+        {step === "diagnosis" && <DiagnosisStep w={w} />}
+        {step === "optimize" && <OptimizeStep w={w} />}
+        {step === "retest" && <RetestStep w={w} />}
+        {step === "beforeAfter" && <BeforeAfterStep w={w} />}
+        {step === "compResult" && comp ? (
+          <section className="wz-step"><header className="wz-step-head"><h2>Rakip sonucu</h2></header><CompResult comp={comp} aoiTypes={engine.aoiTypes} /><div className="wz-actions"><Link className="wz-btn" href="/analyses">Analizlerime dön</Link></div></section>
+        ) : null}
+        {step === "shelfResult" && shelf ? (
+          <section className="wz-step"><header className="wz-step-head"><h2>Raf sonucu</h2></header><ShelfResult shelf={shelf} brand={project.brand} /><div className="wz-actions"><Link className="wz-btn" href="/analyses">Analizlerime dön</Link></div></section>
+        ) : null}
+      </main>
+    </>
   );
 }
